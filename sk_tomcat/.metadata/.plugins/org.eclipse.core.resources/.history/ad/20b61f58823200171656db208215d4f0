@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
+    <wb-module deploy-name="sk_server">
+        <wb-resource deploy-path="/" source-path="/WebContent"/>
+        <property name="context-root" value="sk_server"/>
+        <property name="java-output-path" value="/sk_server/build/classes"/>
+    </wb-module>
+</project-modules>

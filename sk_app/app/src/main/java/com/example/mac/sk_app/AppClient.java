@@ -1,0 +1,109 @@
+package com.example.mac.sk_app;
+
+/**
+ * Created by mac on 2017. 5. 6..
+ */
+
+
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.io.ByteArrayOutputStream;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+
+import android.util.Log;
+
+import android.os.AsyncTask;
+
+
+
+public class AppClient extends AsyncTask<String, Void, Void> {
+
+    private String url;
+    private String result;
+
+    @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
+
+        url = "http://silverkeeper.iptime.org/sk_server/connect";
+
+    }
+
+    @Override
+    public Void doInBackground(String... params) {
+        try {
+            URL obj = new URL(url);
+            HttpURLConnection conn = (HttpURLConnection) obj.openConnection();
+
+            conn.setReadTimeout(10000);
+            conn.setConnectTimeout(15000);
+            conn.setRequestMethod("POST");
+            conn.setDoInput(true);
+            conn.setDoOutput(true);
+            conn.setUseCaches(false);
+            conn.setDefaultUseCaches(false);
+            conn.setRequestProperty("Content-Type","application/x-www-form-urlencoded");
+
+
+            OutputStream out = conn.getOutputStream();
+            out.write("id=android".getBytes());
+            out.write("&".getBytes());
+            out.write(("name=" + URLEncoder.encode("android","UTF-8")).getBytes());
+            out.close();
+
+            InputStream in = conn.getInputStream();
+            ByteArrayOutputStream bout = new ByteArrayOutputStream();
+            byte[] buf = new byte[1024 * 8];
+            int length = 0;
+            while ((length = in.read(buf)) != -1) {
+                bout.write(buf, 0, length);
+            }
+            System.out.println(new String(bout.toByteArray(), "UTF-8"));
+            Log.w("server",new String(bout.toByteArray(), "UTF-8"));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+
+        }
+
+        return null;
+
+    }
+
+    @Override
+    protected void onPostExecute(Void aVoid)
+    {
+        super.onPostExecute(aVoid);
+        System.out.println(result);
+    }
+
+
+    private static String mapToUrl(Map<String, String> InMap){
+
+        Map<String, String> inParamMap = InMap;
+        Set<String> set       = inParamMap.keySet();
+        Iterator<String> iter      = set.iterator();
+        String              param     = "";
+        String              key       = "";
+
+        while(iter.hasNext()){
+            key = iter.next();
+            if(param.length()==0){
+                param = "?"+key +"=" +inParamMap.get(key);
+            }else{
+                param += "&"+key +"=" +inParamMap.get(key);
+            }
+        }
+        return param;
+    }
+
+
+}
+
+
+
