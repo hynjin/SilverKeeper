@@ -12,20 +12,17 @@ import android.util.Log;
 
 public class MainActivity extends AppCompatActivity{
 
-    Button cnt;
     TextView text;
     EditText silver;
     EditText heart;
     EditText step;
     Button send;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        cnt = (Button) findViewById(R.id.cnt);
         text = (TextView) findViewById(R.id.log);
         silver = (EditText) findViewById(R.id.silverID);
         heart = (EditText) findViewById(R.id.heartRate);
@@ -33,25 +30,25 @@ public class MainActivity extends AppCompatActivity{
         send = (Button) findViewById(R.id.send); //button to send
 
 
-        cnt.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                text.append("try to connect...\n");
-
-                AppClient appClient = new AppClient();
-                appClient.execute();
-
-                text.append("success to connect...\n");
-            }
-        });
-
         send.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
+                String param ="id=app&passwd=zzz&";
+                param =  param +"silverID="+ silver.getText().toString()
+                        +"&heartRate="+ heart.getText().toString()
+                        +"&stepCnt="+ step.getText().toString();
+
+                text.append("try to connect...\n");
+
+                AppClient appClient = new AppClient();
+
+                appClient.execute(param);
+                Log.v("??",param);
+
+                text.append("success to connect...\n");
+
                 silver.setText("");
                 heart.setText("");
                 step.setText("");

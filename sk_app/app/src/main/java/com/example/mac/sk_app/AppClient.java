@@ -51,9 +51,11 @@ public class AppClient extends AsyncTask<String, Void, Void> {
 
 
             OutputStream out = conn.getOutputStream();
-            out.write("id=android".getBytes());
-            out.write("&".getBytes());
-            out.write(("name=" + URLEncoder.encode("android","UTF-8")).getBytes());
+            String test ="";
+            for(int i=0;i<params.length;i++)
+                test = test + params[i];
+            Log.v("///",test);
+            out.write(test.getBytes());
             out.close();
 
             InputStream in = conn.getInputStream();

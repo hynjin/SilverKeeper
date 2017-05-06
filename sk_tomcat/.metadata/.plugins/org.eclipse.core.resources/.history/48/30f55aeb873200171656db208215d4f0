@@ -32,9 +32,9 @@ public class httpServlet extends HttpServlet {
         System.out.println("get request");
 		String id = request.getParameter("id");
         String passwd = request.getParameter("passwd");
-        String silver = request.getParameter("silverID");
-        String heart = request.getParameter("heartRate");
-        String step = request.getParameter("stepCnt");
+        String silver = request.getParameter("silver");
+        String heart = request.getParameter("heart");
+        String step = request.getParameter("step");
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
 
