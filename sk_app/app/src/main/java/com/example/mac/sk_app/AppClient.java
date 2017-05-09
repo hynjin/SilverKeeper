@@ -9,12 +9,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.io.ByteArrayOutputStream;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-
 import android.util.Log;
 
 import android.os.AsyncTask;
@@ -26,6 +24,7 @@ public class AppClient extends AsyncTask<String, Void, Void> {
     private String url;
     private String result;
 
+    private HttpURLConnection conn;
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
@@ -38,7 +37,7 @@ public class AppClient extends AsyncTask<String, Void, Void> {
     public Void doInBackground(String... params) {
         try {
             URL obj = new URL(url);
-            HttpURLConnection conn = (HttpURLConnection) obj.openConnection();
+            conn = (HttpURLConnection) obj.openConnection();
 
             conn.setReadTimeout(10000);
             conn.setConnectTimeout(15000);
@@ -81,6 +80,7 @@ public class AppClient extends AsyncTask<String, Void, Void> {
     protected void onPostExecute(Void aVoid)
     {
         super.onPostExecute(aVoid);
+        conn.disconnect();
         System.out.println(result);
     }
 
