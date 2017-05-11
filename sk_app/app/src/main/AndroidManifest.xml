@@ -10,13 +10,26 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".Loading">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".ChoiceRole" />
+        <activity android:name=".ChoiceKeeper" />
+        <activity android:name=".ChoiceSilver" />
+        <activity android:name=".AgreeData" />
+        <activity android:name=".InputRasp" />
+        <activity android:name=".ErrorRasp" />
+        <activity android:name=".SuccessRasp" />
+        <activity android:name=".ViewData" />
+        <activity android:name=".CheckIdentity" />
+        <activity android:name=".InputKeeper" />
+        <activity android:name=".ErrorIdentity" />
+        <activity android:name=".ViewKdata" />
+        <activity android:name=".RejectKeeper" />
     </application>
 
 </manifest>
