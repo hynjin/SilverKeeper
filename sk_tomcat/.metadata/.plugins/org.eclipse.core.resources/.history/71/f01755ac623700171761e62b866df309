@@ -63,10 +63,10 @@ public class receiveSilverData extends HttpServlet {
         String currentTime = request.getParameter("currentTime");
         String checkMiBand = request.getParameter("checkMiBand");
 
-		System.out.println(checkMiBand);
 		SilverDAO sDAO = new SilverDAO();
         SilverVO silverVO=new SilverVO(Integer.parseInt(heartRate), Integer.parseInt(walkCount), 
-        		Integer.parseInt(identifyNumber),Date.valueOf(currentTime), Boolean.valueOf(checkMiBand).booleanValue());
+        		Integer.parseInt(identifyNumber),Integer.parseInt(currentTime), Boolean.valueOf(checkMiBand).booleanValue());
+        //Date.valueOf(currentTime), Boolean.valueOf(checkMiBand).booleanValue());
         //sDAO.insertSilverData("SV005", silverVO);
 		
         try{
@@ -78,7 +78,7 @@ public class receiveSilverData extends HttpServlet {
         	java.sql.Connection conn = java.sql.DriverManager.getConnection(dbinfo,ID,pw);
         	java.sql.Statement stmt = conn.createStatement();
         	
-        	String db = "insert into silverData(heartRate,walkCount,identifyNumber,connMiBand,currentTime) values("+silverVO.toStringDB()+")";
+        	String db = "insert into silverData(heartRate,walkCount,identifyNumber,currentTime,connMiBand) values("+silverVO.toStringDB()+")";
         	System.out.println(db);
         	stmt.executeUpdate(db);
         	conn.close();

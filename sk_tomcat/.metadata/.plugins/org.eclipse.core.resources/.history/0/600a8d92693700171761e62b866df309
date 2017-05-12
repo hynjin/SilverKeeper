@@ -82,7 +82,7 @@ return "heartRate="+this.heartRate+"&"+
 public String toStringDB()
 {
 //checkMiBand가 끝에 있으면 true 값이 null로 넘어감..왜지..중간에 있으면 문제 없음!
-return this.heartRate+","+this.walkCount+","+this.identifyNumber+","+this.checkMiBand+","+"'"+this.currentTime+"'";
+return this.heartRate+","+this.walkCount+","+this.identifyNumber+","+","+this.checkMiBand+this.currentTime;
 }
 
 }

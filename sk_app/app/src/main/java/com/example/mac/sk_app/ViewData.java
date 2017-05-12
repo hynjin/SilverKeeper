@@ -27,11 +27,11 @@ public class ViewData extends AppCompatActivity {
             public void onClick(View view)
             {
                 SilverVO silverData = new SilverVO();
-                silverData.setHeartRate(111);
+                silverData.setHeartRate(11);
                 silverData.setWalkCount(222);
                 silverData.setIdentifyNumber(333);
-                silverData.setCurrentTime(Date.valueOf("2017-05-13"));
-                silverData.setCheckMiBand(true);
+                silverData.setCurrentTime(new Date(System.currentTimeMillis()));
+                silverData.setCheckMiBand(Boolean.valueOf("true").booleanValue());
                 String param = silverData.toString();
                         //"heartRate=123&walkCount=444&identifyNumber=6666&currentTime=2017-05-13&checkMiBand=true";
 

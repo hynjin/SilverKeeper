@@ -78,7 +78,7 @@ public class receiveSilverData extends HttpServlet {
         	java.sql.Connection conn = java.sql.DriverManager.getConnection(dbinfo,ID,pw);
         	java.sql.Statement stmt = conn.createStatement();
         	
-        	String db = "insert into silverData(heartRate,walkCount,identifyNumber,connMiBand,currentTime) values("+silverVO.toStringDB()+")";
+        	String db = "insert into silverData(heartRate,walkCount,identifyNumber,currentTime,connMiBand) values("+silverVO.toStringDB()+")";
         	System.out.println(db);
         	stmt.executeUpdate(db);
         	conn.close();
