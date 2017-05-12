@@ -914,15 +914,70 @@ public class SilverDAO {
 		return rowNum;
 	}
 	*/
+	public String checkIdentifyNumber(int idNum)
+	{
+		int count=0;
+		String silverID="";
+		PreparedStatement pstmt=null;
+		try 
+		{
+			String sql="select silverID,identifyNumber from silverData where identifyNumber=?";
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setInt(1,idNum);
+			
+			ResultSet rs=pstmt.executeQuery();
+			while(rs.next())
+			{
+				int result=rs.getInt("identifyNumber");
+				count++;
+				if(count==0)
+				{
+					silverID="";
+				}
+				else
+					silverID=rs.getString("silverID");
+			}
+		} 
+		catch (SQLException se) 
+		{
+			se.printStackTrace();
+			// TODO: handle exception
+		}
+		catch (Exception e) 
+		{
+			e.printStackTrace();
+		}
+		finally
+		{
+			try 
+			{
+				if(pstmt!=null)
+				{
+					pstmt.close();
+				}
+				
+			} 
+			catch (SQLException se) {
+				{
+					se.printStackTrace();
+				}
+			}
+		}
+		if(count==0)
+			return null;
+		else
+			return silverID;
+	}
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		SilverDAO dao=new SilverDAO();
-		SilverVO voTest=new SilverVO(35,60,1435,new Date(System.currentTimeMillis()),true);
+		/*SilverVO voTest=new SilverVO(35,60,1435,new Date(System.currentTimeMillis()),true);
 		SilverHeartRateVO hrTest=new SilverHeartRateVO(150, 78, new Date(System.currentTimeMillis()));
 		System.out.println(dao.insertSilverData("SV005",voTest)+"\n");
 		System.out.println(dao.insertHeartRate("SV005",hrTest)+"\n");
 		System.out.println(dao.insertHeartRate("SV005",190,50,new Date(System.currentTimeMillis()))+"\n");
-
+		 */
+		System.out.println("test : "+dao.checkIdentifyNumber(1424));
 	}
 
 }
