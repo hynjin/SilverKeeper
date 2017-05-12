@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity{
             @Override
             public void onClick(View v)
             {
-                String param ="id=app&passwd=zzz&";
+                String param ="heartRate=heartRate&walkCount=walkCount&identifyNumber=identifyNumber&currentTime=2017-05-13&checkMiBand=true";
                 param =  param +"silverID="+ silver.getText().toString()
                         +"&heartRate="+ heart.getText().toString()
                         +"&stepCnt="+ step.getText().toString();

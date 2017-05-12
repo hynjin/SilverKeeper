@@ -53,4 +53,10 @@
         android:textSize="30dp"
         android:textColor="#000000"
         android:text="10000" />
+
+    <Button
+        android:id="@+id/test"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="test" />
 </LinearLayout>

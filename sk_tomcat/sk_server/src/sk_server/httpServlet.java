@@ -2,16 +2,21 @@ package sk_server;
 
 import java.io.PrintWriter;
 import java.io.IOException;
+import java.sql.Date;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import conn.silver.SilverDAO;
+import conn.silver.vo.SilverVO;
+
 /**
  * Servlet implementation class ConnectServlet
  */
-@WebServlet("/connect")
+@WebServlet("/connect1")
 public class httpServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -37,7 +42,13 @@ public class httpServlet extends HttpServlet {
         String step = request.getParameter("stepCnt");
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
-
+        
+        
+       SilverDAO dao=new SilverDAO();
+        SilverVO silverVO=new SilverVO(15, 111, 0, new Date(System.currentTimeMillis()), true);
+        dao.insertSilverData("SV005", silverVO);
+        
+        
         out.print("아이디="+id);
         out.print("비밀번호="+passwd+"<br>");
         out.print("silverID="+silver+"<br>");

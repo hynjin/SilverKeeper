@@ -29,7 +29,7 @@ public class AppClient extends AsyncTask<String, Void, Void> {
     protected void onPreExecute() {
         super.onPreExecute();
 
-        url = "http://silverkeeper.iptime.org/sk_server/connect";
+        url = "http://silverkeeper.iptime.org/sk_server/receiveSilverData";
 
     }
 
@@ -82,26 +82,6 @@ public class AppClient extends AsyncTask<String, Void, Void> {
         super.onPostExecute(aVoid);
         conn.disconnect();
         System.out.println(result);
-    }
-
-
-    private static String mapToUrl(Map<String, String> InMap){
-
-        Map<String, String> inParamMap = InMap;
-        Set<String> set       = inParamMap.keySet();
-        Iterator<String> iter      = set.iterator();
-        String              param     = "";
-        String              key       = "";
-
-        while(iter.hasNext()){
-            key = iter.next();
-            if(param.length()==0){
-                param = "?"+key +"=" +inParamMap.get(key);
-            }else{
-                param += "&"+key +"=" +inParamMap.get(key);
-            }
-        }
-        return param;
     }
 
 
