@@ -1,0 +1,108 @@
+package connection;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Enumeration;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+
+import java.sql.Connection;
+import java.sql.Statement;
+/**
+ * created by hyunjin
+ * connection of server
+ * This class connection with server.
+ * 2017-05-16
+ */
+
+public class Connect {
+	Date date = new Date(System.currentTimeMillis());
+	
+    private Connection conn;
+    private Statement stmt;
+    
+    private String dbinfo;
+	private String ID;
+	private String pw;
+	private String key;
+	private String value;
+
+	
+	public Connect()
+	{
+        try{
+        	Class.forName("com.mysql.jdbc.Driver");
+        	dbinfo = "jdbc:mysql://localhost:3306/dbTest";
+        	ID = "root";
+        	pw = "root";
+        	key = "";
+        	value = "";
+        	
+        }catch(ClassNotFoundException e)
+        {
+        	e.printStackTrace();
+        }
+	}
+	
+	public void getData(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException
+	{
+		response.getWriter().append("Served at: ").append(request.getContextPath());
+		
+		response.setContentType("text/html");
+		response.setCharacterEncoding("UTF-8");
+
+		Enumeration<String> parameterNames = request.getParameterNames();
+		String name = (String) parameterNames.nextElement();
+		key = key + name;
+		value = value + request.getParameter(name);
+		while (parameterNames.hasMoreElements())
+		{
+			name = (String) parameterNames.nextElement();
+			key = key +"," + name;
+			value = value + "," + request.getParameter(name);
+			System.out.println(name + "=" + request.getParameter(name));
+        } 
+		
+	}
+	
+	public String getKey()
+	{
+		return key;
+	}
+	
+	public String getValue()
+	{
+		return value;
+	}
+	
+	
+	public void sendData(String db ,HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException
+	{
+		
+		try{
+        	
+        	java.sql.Connection conn = java.sql.DriverManager.getConnection(dbinfo,ID,pw);
+        	java.sql.Statement stmt = conn.createStatement();
+        	
+        	System.out.println(db);
+        	stmt.executeUpdate(db);
+        	conn.close();
+        	
+        }catch(java.sql.SQLException e)
+        {
+        	e.printStackTrace();
+        }
+        catch(Exception e)
+        {
+        	e.printStackTrace();
+        }
+        
+		PrintWriter out = response.getWriter();
+		System.out.println(db);
+		out.print("server successfully send the Data");
+	}
+}
+

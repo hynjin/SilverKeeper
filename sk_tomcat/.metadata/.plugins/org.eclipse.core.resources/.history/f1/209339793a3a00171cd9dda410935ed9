@@ -1,0 +1,150 @@
+package connection;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.Date;
+import java.util.Enumeration;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import java.lang.Class;
+import java.lang.reflect.Method;
+
+import conn.silver.SilverDAO;
+import conn.silver.vo.SilverAddressVO;
+import conn.silver.vo.SilverHeartRateVO;
+import conn.silver.vo.SilverVO;
+import conn.keeper.KeeperDAO;
+import java.sql.DriverManager;
+import java.util.Enumeration;
+import java.sql.Connection;
+/**
+ * created by hyunjin
+ * connection of server
+ * This class connection with server.
+ * 2017-05-16
+ */
+
+public class connection {
+	private SilverDAO sDAO;
+    //private SilverVO silverVO;
+    
+    private String dbinfo;
+	private String ID;
+	private String pw;
+	private String db;
+	
+	Class<?> silverVO;
+	Object silverObj;
+	
+	public connection()
+	{
+		sDAO = new SilverDAO();
+		//silverVO = new SilverVO();
+		try {
+            silverVO = Class.forName("SilverVO");
+            silverObj = silverVO.newInstance();
+		}catch(Exception e)
+		{
+		}
+		
+        try{
+        	Class.forName("com.mysql.jdbc.Driver");
+        	dbinfo = "jdbc:mysql://localhost:3306/dbTest";
+        	ID = "root";
+        	pw = "root";
+        	
+        }catch(ClassNotFoundException e)
+        {
+        	e.printStackTrace();
+        }
+	}
+	
+	public void receiveData(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException
+	{
+		response.getWriter().append("Served at: ").append(request.getContextPath());
+		
+		response.setContentType("text/html");
+		response.setCharacterEncoding("UTF-8");
+
+		Enumeration<String> parameterNames = request.getParameterNames();
+		while (parameterNames.hasMoreElements())
+		{
+			String name = (String) parameterNames.nextElement();
+			String f = name.substring(0, 1).toUpperCase();
+		    String methodName = f + name.substring(1);
+			System.out.println(methodName + "=" + request.getParameter(name));
+			
+			try
+			{
+            Method m = silverVO.getDeclaredMethod("get"+methodName, boolean.class);
+            m.invoke(silverObj, true);
+            Method toDB = silverVO.getDeclaredMethod("toStringDB", boolean.class);
+            db = "insert into silverData(heartRate,walkCount,identifyNumber,connMiBand,currentTime) values("+ toDB.invoke(silverObj, true)+")";
+			}catch(Exception e)
+			{
+			}
+ 
+        } 
+		
+ 
+	        //sDAO.insertSilverData("SV005", silverVO);
+			
+        try{
+        	
+        	java.sql.Connection conn = java.sql.DriverManager.getConnection(dbinfo,ID,pw);
+        	java.sql.Statement stmt = conn.createStatement();
+        	
+        	
+        	//String db = "insert into silverData(heartRate,walkCount,identifyNumber,connMiBand,currentTime) values("+ toDB.invoke(silverObj, true)+")";
+        	System.out.println(db);
+        	stmt.executeUpdate(db);
+        	conn.close();
+        	
+        }catch(java.sql.SQLException e)
+        {
+        	e.printStackTrace();
+        }
+        catch(Exception e)
+        {
+        	e.printStackTrace();
+        }
+		
+        
+		PrintWriter out = response.getWriter();
+		System.out.println(silverVO.toString());
+		out.print("server successfully received the Data");
+	}
+	
+	public void sendData(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException
+	{
+		
+		try{
+        	
+        	java.sql.Connection conn = java.sql.DriverManager.getConnection(dbinfo,ID,pw);
+        	java.sql.Statement stmt = conn.createStatement();
+        	
+        	String db = "insert into silverData(heartRate,walkCount,identifyNumber,connMiBand,currentTime)"; //values("+silverVO.toStringDB()+")";
+        	System.out.println(db);
+        	stmt.executeUpdate(db);
+        	conn.close();
+        	
+        }catch(java.sql.SQLException e)
+        {
+        	e.printStackTrace();
+        }
+        catch(Exception e)
+        {
+        	e.printStackTrace();
+        }
+        
+		PrintWriter out = response.getWriter();
+		System.out.println(silverVO.toString());
+		out.print("server successfully send the Data");
+	}
+}
+

@@ -1,6 +1,7 @@
 package connection;
 
 import java.io.IOException;
+import java.util.HashMap;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -8,6 +9,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
+ * created by hyunjin
+ * connection of server
+ * This servlet receive roleChoice from App to server.
+ * 2017-05-13
+ * 
+ * just receive roleChoice
+ * successfully test
+ * 2017-05-16
+ * 
  * Servlet implementation class selectRole
  */
 @WebServlet("/selectRole")
@@ -17,9 +27,15 @@ public class selectRole extends HttpServlet {
     /**
      * @see HttpServlet#HttpServlet()
      */
+	private Connect connect;
+    private HashMap<String,String> dataMap;
+    
     public selectRole() {
         super();
         // TODO Auto-generated constructor stub
+        
+        connect = new Connect();
+        dataMap = new HashMap<String,String>();
     }
 
 	/**
@@ -35,7 +51,8 @@ public class selectRole extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		doGet(request, response);
+		dataMap = connect.getData(request, response);
+		
 	}
 
 }

@@ -1,0 +1,100 @@
+package connection;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import conn.silver.SilverDAO;
+
+/**
+ * created by hyunjin
+ * connection of server
+ * This servlet send Miband bluetooth status from silverApp to server.
+ * 2017-05-13
+ * 
+ * Servlet implementation class receiveBLEStatus
+ */
+
+@WebServlet("/receiveBLEStatus")
+public class receiveBLEStatus extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+       
+	private SilverDAO sDAO;
+    
+    private String dbinfo;
+	private String ID;
+	private String pw;
+	
+	
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public receiveBLEStatus() {
+        super();
+        // TODO Auto-generated constructor stub
+        
+        sDAO = new SilverDAO();
+        try{
+        	Class.forName("com.mysql.jdbc.Driver");
+        	dbinfo = "jdbc:mysql://localhost:3306/dbTest";
+        	ID = "root";
+        	pw = "root";
+        	
+        }catch(ClassNotFoundException e)
+        {
+        	e.printStackTrace();
+        }
+    }
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		response.getWriter().append("Served at: ").append(request.getContextPath());
+
+		System.out.println("receiveBLEStatus");
+
+		response.setContentType("text/html");
+		response.setCharacterEncoding("UTF-8");
+
+        String silverID = request.getParameter("silverID");
+        String bleStatus = request.getParameter("BLESTATUS");
+        //sDAO.updateBLEStatus("S0001",Boolean.valueOf(bleStatus));
+        
+        //mysql
+        //send data format
+        //out.write("silverID=\"S0001\"&BLESTATUS=true".getBytes());
+        try{
+        	
+        	java.sql.Connection conn = java.sql.DriverManager.getConnection(dbinfo,ID,pw);
+        	java.sql.Statement stmt = conn.createStatement();
+        	
+        	
+        	String db = "update silverMiBandConn set BLESTATUS="+bleStatus+" where silverID="+silverID;
+        	System.out.println(db);
+        	stmt.executeUpdate(db);
+        	conn.close();
+        	
+        }catch(java.sql.SQLException e)
+        {
+        	e.printStackTrace();
+        }
+        catch(Exception e)
+        {
+        	e.printStackTrace();
+        }
+        //
+        
+		PrintWriter out = response.getWriter();
+		System.out.println(bleStatus+Boolean.valueOf(bleStatus));
+		out.print("server successfully received the bleStatus");
+		
+	}
+
+}
