@@ -1,0 +1,88 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+cK10vzn7dLE:APA91bFa-IzfXEYS7AIgTjEjcvRPRbDq_fl74l4KN2vnCS9bAByticmEYr5WxGxrrkN5Kn0LXt0kV3YCHKVg6Rz37TuJkI_AHbMqNee64MgGIrmbSah3xHceJUQw8tBInJjYdf_-GHYJ
+</body>
+</html>
+
+
+<%@page import="java.net.URLEncoder"%>
+<%@ page import="java.util.*"%>
+
+<%@ page import="com.google.android.gcm.server.*"%>
+
+
+
+<%
+	ArrayList<String> regid = new ArrayList<String>();	//reg_id
+	String MESSAGE_ID = String.valueOf(Math.random() % 100 + 1);	//메시지 고유 ID
+	boolean SHOW_ON_IDLE = false;	//기기가 활성화 상태일때 보여줄것인지
+	int LIVE_TIME = 1;	//기기가 비활성화 상태일때 GCM가 메시지를 유효화하는 시간
+	int RETRY = 2;	//메시지 전송실패시 재시도 횟수
+
+
+
+	String simpleApiKey = "AIzaSyC-eisgmovdUQQgTwQ7f9hOFdrCvKq****";	// 개발자콘솔에서 가져온 서버키
+	String gcmURL = "https://android.googleapis.com/gcm/send";	
+	String msg = request.getParameter("msg");
+
+	if(msg==null || msg.equals("")){
+		msg="";
+	}
+
+	msg = new String(msg.getBytes("ISO-8859-1"), "UTF-8");   //메시지 한글깨짐 처리
+
+	try {
+		String url = "jdbc:mysql://localhost/vicjoa2";
+		String id = "vicjoa2";
+		String pass = "****";  //자신의 DB 비밀번호
+
+		ResultSet rs = null;
+		Class.forName("com.mysql.jdbc.Driver");
+		Connection con = DriverManager.getConnection(url, id, pass);
+
+		Statement stmt = con.createStatement();			
+		String sql = "select reg_id from push";
+
+		rs = stmt.executeQuery(sql);
+		//모든 등록ID를 리스트로 묶음
+		while(rs.next()){
+			regid.add(rs.getString("reg_id"));
+		}
+
+		con.close();
+
+
+		msg = URLEncoder.encode(msg, "UTF-8"); //메시지 인코딩
+
+		Sender sender = new Sender(simpleApiKey);
+		Message message = new Message.Builder()
+		.collapseKey(MESSAGE_ID)
+		.delayWhileIdle(SHOW_ON_IDLE)
+		.timeToLive(LIVE_TIME)
+		.addData("msg",msg)
+		.build();
+		
+		MulticastResult result1 = sender.send(message,regid,RETRY);
+
+		if (result1 != null) {
+			List<Result> resultList = result1.getResults();
+			for (Result result : resultList) {
+			System.out.println(result.getErrorCodeName());
+			}
+		}
+
+	}catch (Exception e) {
+
+		e.printStackTrace();
+
+	}
+
+%>
+

@@ -1,5 +1,7 @@
 package com.example.mac.sk_app;
 
+import com.google.firebase.messaging.FirebaseMessaging; //FCM
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -13,6 +15,7 @@ public class Loading extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loading);
         LoadingActivity();
+
     }
     private void LoadingActivity() {
         Handler handler = new Handler() {

@@ -1,0 +1,77 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+cK10vzn7dLE:APA91bFa-IzfXEYS7AIgTjEjcvRPRbDq_fl74l4KN2vnCS9bAByticmEYr5WxGxrrkN5Kn0LXt0kV3YCHKVg6Rz37TuJkI_AHbMqNee64MgGIrmbSah3xHceJUQw8tBInJjYdf_-GHYJ
+</body>
+</html>
+
+
+<%@page import="java.net.URLEncoder"%>
+<%@ page import="java.util.*"%>
+
+<%@page import="org.json.simple.JSONObject"%>
+<%@page import="org.json.simple.JSONArray"%>
+<%@page import="connection.sendPushAlarm"%>
+
+<%
+//Charcterset//
+request.setCharacterEncoding("UTF-8");
+%>
+<%
+//입력변수//
+String input_str;
+%>
+<%
+input_str = getParameter(request, "test_str", "");
+System.out.println("input str for http : " + input_str + "(size: "+input_str.length()+")");
+%>
+<%
+//FCM연동(경고메시지가 왔을 경우)//
+if(input_str.equals("fire!!"))
+{
+	String bKey = "cK10vzn7dLE:APA91bFa-IzfXEYS7AIgTjEjcvRPRbDq_fl74l4KN2vnCS9bAByticmEYr5WxGxrrkN5Kn0LXt0kV3YCHKVg6Rz37TuJkI_AHbMqNee64MgGIrmbSah3xHceJUQw8tBInJjYdf_-GHYJ";
+
+	sendPushAlarm sender = new sendPushAlarm(bKey);
+	sender.pushAlarm();
+}
+%>
+<%
+//응답 json메시지 설정//
+//JSON 생성(넘어갈 데이터는 유저정보이니 JSONArray는 필요없다.)//
+JSONObject result_object = new JSONObject();
+//검색조건에 따른 각각의 json데이터를 만들어 준다.//
+JSONObject user_object = new JSONObject();
+user_object.put("server message", input_str);
+result_object.put("server type", "http");
+result_object.put("result", user_object);
+out.clear(); //보내기전 기존 출력내용을 초기화//
+out.println(result_object); //데이터 출력 및 전송//
+out.flush(); //출력버퍼에 있는 데이터를 모두 초기화//
+%>
+<%!
+//함수선언(method: POST)//
+public String getParameter(HttpServletRequest request, String parameter_name, String default_value)
+{
+	String return_str;
+	return_str = request.getParameter(parameter_name);
+	
+	if(return_str == null || return_str.equals(""))
+	{
+		return_str = default_value;
+	}
+	
+	else if(return_str != null)
+	{
+		
+	}
+	
+	return return_str;
+}
+%>
+

@@ -1,0 +1,16 @@
+package manageData;
+
+import connection.sendPushAlarm;
+
+public class ManageData {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		sendPushAlarm pushAlarm;
+		String key ="cK10vzn7dLE:APA91bFa-IzfXEYS7AIgTjEjcvRPRbDq_fl74l4KN2vnCS9bAByticmEYr5WxGxrrkN5Kn0LXt0kV3YCHKVg6Rz37TuJkI_AHbMqNee64MgGIrmbSah3xHceJUQw8tBInJjYdf_-GHYJ";
+		pushAlarm = new sendPushAlarm(key);
+		pushAlarm.pushAlarm();
+
+	}
+
+}
