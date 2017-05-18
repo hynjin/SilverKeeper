@@ -1,0 +1,65 @@
+package connection;
+
+import java.io.IOException;
+import java.util.HashMap;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import conn.silver.SilverDAO;
+import conn.silver.vo.SilverVO;
+
+/**
+ * created by hyunjin
+ * connection of server
+ * This servlet receive SilverData from silverApp to server.
+ * JDBC insert
+ * 2017-05-13
+ * 
+ * successfully test
+ * 2017-05-16
+ * 
+ * Servlet implementation class receiveSilverData
+ */
+@WebServlet("/receiveSilverData")
+public class receiveSilverData extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+       
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+	private SilverDAO sDAO;
+    private SilverVO silverVO;
+    
+    private Connect connect;
+    
+    public receiveSilverData() {
+        super();
+        // TODO Auto-generated constructor stub
+        
+        sDAO = SilverDAO.getInstance();
+        silverVO = new SilverVO();
+        
+        connect = new Connect();
+
+    }
+	
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		System.out.println("receiveSilverData");
+		
+		connect.getData(request, response);
+		String db = "insert into silverData("+connect.getKey()+") values("+connect.getValue()+")";
+    	connect.sendData(db, request, response);
+    	
+    	
+	}
+
+}

@@ -1,0 +1,59 @@
+package connection;
+
+import java.io.IOException;
+import java.util.HashMap;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import conn.silver.SilverDAO;
+
+/**
+ * created by hyunjin
+ * connection of server
+ * This servlet receive Silver identifyNumber from keeperApp to server.
+ * 2017-05-13
+ * 
+ * keeper : keeperID + identifyNumber
+ * server : keeperID -> silverID -> identifyNumber
+ * *****just receive identifyNumber from keeper.
+ * 
+ * Servlet implementation class receiveIdentifyNumber
+ */
+@WebServlet("/receiveIdentifyNumber")
+public class receiveIdentifyNumber extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+       
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+	private SilverDAO sDAO;
+    private Connect connect;
+    private HashMap<String,String> dataMap;
+	
+    public receiveIdentifyNumber() {
+        super();
+        // TODO Auto-generated constructor stub
+        sDAO = SilverDAO.getInstance();
+        connect = new Connect();
+        dataMap = new HashMap<String,String>();
+    }
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		System.out.println("receiveIdentifyNumber");
+		
+    	dataMap = connect.getData(request, response);
+    	String silverID=sDAO.selectSilverID("androidID");//실버 아이디 찾는 연산 추가.
+		String identifyNumber=dataMap.get(silverID);
+		sDAO.updateIdentifyNumber(silverID, Integer.parseInt(identifyNumber));
+		
+    }
+
+}
