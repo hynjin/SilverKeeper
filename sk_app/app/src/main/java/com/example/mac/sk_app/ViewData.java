@@ -36,9 +36,9 @@ public class ViewData extends AppCompatActivity {
                         //"heartRate=123&walkCount=444&identifyNumber=6666&currentTime=2017-05-13&checkMiBand=true";
 
                 Log.v("??",param);
-                AppClient appClient = new AppClient();
+             /*   AppClient appClient = new AppClient();
 
-                appClient.execute(param);
+                appClient.execute(param);*/
 
             }
         });

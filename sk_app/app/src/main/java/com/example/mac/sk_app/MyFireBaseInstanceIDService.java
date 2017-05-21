@@ -8,16 +8,13 @@ package com.example.mac.sk_app; /**
  */
 
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
-
-import java.io.IOException;
 public class MyFireBaseInstanceIDService extends FirebaseInstanceIdService {
 
     private static final String TAG = MyFireBaseInstanceIDService.class.getSimpleName();
-
+    private String token;
     /**
      * Called if InstanceID token is updated. This may occur if the security of
      * the previous token had been compromised. Note that this is called when the InstanceID token
@@ -27,10 +24,10 @@ public class MyFireBaseInstanceIDService extends FirebaseInstanceIdService {
     @Override
     public void onTokenRefresh() {
         // Get updated InstanceID token.
-        String refreshedToken = FirebaseInstanceId.getInstance().getToken();
-        Log.d("Token", "Refreshed token: " + refreshedToken);
+        token = FirebaseInstanceId.getInstance().getToken();
+        Log.d("Token", "Refreshed token: " + token);
         // TODO: Implement this method to send any registration to your app's servers.
-        sendRegistrationToServer(refreshedToken);
+        sendRegistrationToServer(token);
     }
     // [END refresh_token]
 
@@ -45,5 +42,9 @@ public class MyFireBaseInstanceIDService extends FirebaseInstanceIdService {
     // TODO: 이후 생성등록된 토큰을 서버에 보내 저장해 두었다가 추가 작업을 할 수 있도록 한다.
     private void sendRegistrationToServer(String token) {
         // Add custom implementation, as needed.
+    }
+    public String getToken()
+    {
+        return this.token;
     }
 }
