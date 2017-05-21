@@ -28,6 +28,7 @@ public class Connect {
 	private String pw;
 	private String key;
 	private String value;
+	private String type;
 	private HashMap<String, String> dataMap;
 
 
@@ -42,11 +43,16 @@ public class Connect {
         	pw = "root";
         	key = "";
         	value = "";
+        	type = "";
         	
         }catch(ClassNotFoundException e)
         {
         	e.printStackTrace();
         }
+	}
+	
+	public String getType(){
+		return type;
 	}
 	
 	//receive data from client
@@ -56,12 +62,14 @@ public class Connect {
 		response.setCharacterEncoding("UTF-8");
 		response.getWriter().append("Served at: ").append(request.getContextPath());
 		
-
 		Enumeration<String> parameterNames = request.getParameterNames();
 		while (parameterNames.hasMoreElements())
 		{
 			String name = (String) parameterNames.nextElement();
-			dataMap.put(name, request.getParameter(name));
+			if(name.equals("getMethod"))
+				type = request.getParameter(name);
+			else
+				dataMap.put(name, request.getParameter(name));
 			System.out.println(name + "=" + request.getParameter(name));
         } 
 		return dataMap;
