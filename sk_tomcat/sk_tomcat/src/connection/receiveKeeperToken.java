@@ -8,8 +8,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import conn.keeper.KeeperDAO;
-
 /**
  * created by hyunjin
  * connection of server
@@ -30,7 +28,7 @@ public class receiveKeeperToken extends HttpServlet {
      */
 	private Connect connect;
     private HashMap<String,String> dataMap;
-    private KeeperDAO kDAO=KeeperDAO.getInstance();
+    
     public receiveKeeperToken() {
         super();
         // TODO Auto-generated constructor stub
@@ -45,14 +43,8 @@ public class receiveKeeperToken extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		dataMap = connect.getData(request, response);
-		/*String db = "insert into keeperData("+connect.getKey()+") values("+connect.getValue()+")";
-    	connect.sendData(db, request, response);*/
-		
-		String key=connect.getKey();
-		String androidID=dataMap.get("androidID");
-    	String keeperID=kDAO.selectKeeperID(androidID);
-		String keeperToken=dataMap.get("keeperToken");
-		kDAO.updateKeeperToken(keeperID, keeperToken);
+		String db = "insert into keeperData("+connect.getKey()+") values("+connect.getValue()+")";
+    	connect.sendData(db, request, response);
 		
 	}
 

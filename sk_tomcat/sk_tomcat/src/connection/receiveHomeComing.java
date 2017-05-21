@@ -1,7 +1,6 @@
 package connection;
 
 import java.io.IOException;
-import java.util.HashMap;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -31,14 +30,13 @@ public class receiveHomeComing extends HttpServlet {
      * @see HttpServlet#HttpServlet()
      */
 	private SilverDAO sDAO;
-	private Connect connect;
-	private HashMap<String,String> dataMap;
+	Connect connect;
+	
     public receiveHomeComing() {
         super();
         // TODO Auto-generated constructor stub
 
-        sDAO =SilverDAO.getInstance();
-        
+        sDAO = new SilverDAO();
        connect = new Connect();
     }
 
@@ -48,20 +46,11 @@ public class receiveHomeComing extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		System.out.println("receiveHomeComing");
-		dataMap = connect.getData(request, response);
-		String key=connect.getKey();
-		String androidID=dataMap.get("androidID");
-		String silverID=sDAO.selectSilverID(androidID);
-		String bleStatus=dataMap.get(silverID);
-		if(bleStatus=="o")
-		{
-			sDAO.updateBLEStatus(silverID, true);
-		}
-		else
-			sDAO.updateBLEStatus(silverID, false);
-		/*String db = "update silverHomeComingStatus set homeComing="+connect.getKey()+" where silverID="+connect.getValue();
 		
-		connect.sendData(db, request, response);*/
+		connect.getData(request, response);
+		String db = "update silverHomeComingStatus set homeComing="+connect.getKey()+" where silverID="+connect.getValue();
+		
+		connect.sendData(db, request, response);
 		
        
 	}

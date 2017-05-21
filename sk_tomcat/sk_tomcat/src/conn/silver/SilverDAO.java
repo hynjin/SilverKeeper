@@ -17,17 +17,17 @@ public class SilverDAO {
 	private static final long serialVersionUID=-7422967333451405L;
 	private DBConnectionModule connModule;
 	private Connection conn;
-	private static SilverDAO silverDAO=new SilverDAO();
+	//private SilverDAO silverDAO;
 	
-	private SilverDAO()
+	public SilverDAO()
 	{
 		connModule=DBConnectionModule.getInstance();
 		conn=connModule.getConn();
 	}
-	public static SilverDAO getInstance()
+	/*public static SilverDAO getInstance()
 	{
 		return silverDAO;
-	}
+	}*/
 	//������ �Է�
 	public int insertSilverID(String silverID)
 	{
@@ -530,7 +530,7 @@ public class SilverDAO {
 		PreparedStatement pstmt=null;
 		try 
 		{
-			String sql="select walkCount,heartRate,identifyNumber,currentTime,connMiBand from silverData where silverID=?";
+			String sql="select walkCount,heartRate,currentTime,connMiBand from silverData where silverID=?";
 			pstmt=conn.prepareStatement(sql);
 			pstmt.setString(1,silverID);
 			
@@ -539,7 +539,6 @@ public class SilverDAO {
 			{
 				int walkCount=rs.getInt("walkCount");
 				int heartRate=rs.getInt("heartRate");
-				int identifyNumber=rs.getInt("identifyNumber");
 				Date currentTime=rs.getDate("currentTime");
 				boolean connMiBand=true;
 				if(rs.getInt("connMiBand")==0)
@@ -921,12 +920,12 @@ public class SilverDAO {
 	*/
 	public String checkIdentifyNumber(int idNum)
 	{
-		int count=0;
-		String silverID="";
+		
+		String silverID=null;
 		PreparedStatement pstmt=null;
 		try 
 		{
-			String sql="select silverID,identifyNumber from silverData where identifyNumber=?";
+			String sql="select silverID,identifyNumber from silverIdentifyNumber where identifyNumber=?";
 			pstmt=conn.prepareStatement(sql);
 			pstmt.setInt(1,idNum);
 			
@@ -934,13 +933,7 @@ public class SilverDAO {
 			while(rs.next())
 			{
 				int result=rs.getInt("identifyNumber");
-				count++;
-				if(count==0)
-				{
-					silverID="";
-				}
-				else
-					silverID=rs.getString("silverID");
+				silverID=rs.getString("silverID");
 			}
 		} 
 		catch (SQLException se) 
@@ -968,9 +961,6 @@ public class SilverDAO {
 				}
 			}
 		}
-		if(count==0)
-			return null;
-		else
 			return silverID;
 	}
 	//2017-5-18 18:46 추가. 안드로이드 ID로 실버 식별번호 찾는 연산. 
@@ -986,11 +976,14 @@ public class SilverDAO {
 			while(rs.next())
 			{
 				silverID=rs.getString("silverID");
+				
 				if(silverID.contains(androidID))
 				{
 					break;
 				}
+				silverID="";
 			}
+			
 		} 
 		catch (SQLException se) 
 		{
@@ -1064,12 +1057,13 @@ public class SilverDAO {
 		PreparedStatement pstmt=null;
 		try 
 		{
-			String sql="select identifyNumber from SilverIdentifyNumber";
+			String sql="select identifyNumber from SilverIdentifyNumber where silverID=?";
 			pstmt=conn.prepareStatement(sql);
+			pstmt.setString(1, silverID);
 			ResultSet rs=pstmt.executeQuery();
 			while(rs.next())
 			{
-				identifyNumber=rs.getInt("silverID");
+				identifyNumber=rs.getInt("identifyNumber");
 			}
 		} 
 		catch (SQLException se) 
@@ -1103,12 +1097,12 @@ public class SilverDAO {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		SilverDAO dao=new SilverDAO();
-		/*SilverVO voTest=new SilverVO(35,60,1435,new Date(System.currentTimeMillis()),true);
+		SilverVO voTest=new SilverVO(35,60,new Date(System.currentTimeMillis()),true);
 		SilverHeartRateVO hrTest=new SilverHeartRateVO(150, 78, new Date(System.currentTimeMillis()));
 		System.out.println(dao.insertSilverData("SV005",voTest)+"\n");
 		System.out.println(dao.insertHeartRate("SV005",hrTest)+"\n");
 		System.out.println(dao.insertHeartRate("SV005",190,50,new Date(System.currentTimeMillis()))+"\n");
-		 */
+		 
 		System.out.println("test : "+dao.checkIdentifyNumber(1424));
 	}
 

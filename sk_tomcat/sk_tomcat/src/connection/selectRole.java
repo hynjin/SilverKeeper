@@ -1,18 +1,12 @@
 package connection;
 
 import java.io.IOException;
-import java.sql.Date;
 import java.util.HashMap;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import conn.ManageData;
-import conn.silver.SilverDAO;
-import conn.silver.vo.SilverVO;
 
 /**
  * created by hyunjin
@@ -35,7 +29,6 @@ public class selectRole extends HttpServlet {
      */
 	private Connect connect;
     private HashMap<String,String> dataMap;
-    private ManageData mData=ManageData.getInstance();
     
     public selectRole() {
         super();
@@ -60,20 +53,6 @@ public class selectRole extends HttpServlet {
 		// TODO Auto-generated method stub
 		dataMap = connect.getData(request, response);
 		
-		//태영추가 
-		SilverDAO sDAO=SilverDAO.getInstance();
-		String key=connect.getKey();
-		String androidID=dataMap.get("andoridID");
-		if(sDAO.selectSilverID(androidID)=="noData")
-		{
-			String silverID=mData.createSilverID(androidID);
-			sDAO.insertSilverID(silverID);
-			sDAO.insertIdentifyNumber(silverID, mData.createIdentifyNumber());
-		}
-		else 
-		{
-			//해당하는 실버 식별번호가 있다=이미 등록된 회원이므로 그에 따른 연산 추가 필요함.
-		}
 	}
 
 }

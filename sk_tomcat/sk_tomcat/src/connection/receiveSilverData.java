@@ -1,7 +1,6 @@
 package connection;
 
 import java.io.IOException;
-import java.sql.Date;
 import java.util.HashMap;
 
 import javax.servlet.ServletException;
@@ -12,7 +11,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import conn.silver.SilverDAO;
 import conn.silver.vo.SilverVO;
-import oracle.sql.DATE;
 
 /**
  * created by hyunjin
@@ -35,14 +33,14 @@ public class receiveSilverData extends HttpServlet {
      */
 	private SilverDAO sDAO;
     private SilverVO silverVO;
-    private HashMap<String,String> dataMap;
+    
     private Connect connect;
     
     public receiveSilverData() {
         super();
         // TODO Auto-generated constructor stub
         
-        sDAO = SilverDAO.getInstance();
+        sDAO = new SilverDAO();
         silverVO = new SilverVO();
         
         connect = new Connect();
@@ -57,24 +55,9 @@ public class receiveSilverData extends HttpServlet {
 		// TODO Auto-generated method stub
 		System.out.println("receiveSilverData");
 		
-		dataMap=connect.getData(request, response);
-		/*String db = "insert into silverData("+connect.getKey()+") values("+connect.getValue()+")";
+		connect.getData(request, response);
+		String db = "insert into silverData("+connect.getKey()+") values("+connect.getValue()+")";
     	connect.sendData(db, request, response);
-    	*/
-		String androidID=dataMap.get("androidID");
-		
-		String silverID=sDAO.selectSilverID(androidID);
-		
-		String walkCount=dataMap.get("walkCount");
-		String heartRate=dataMap.get("heartRate");
-		String currentTime=dataMap.get("currentTime");
-		String connMiBand=dataMap.get("connMiBand");
-		boolean miBand=false;
-		if(connMiBand.contains("o"))
-		{
-			miBand=true;
-		}
-		sDAO.insertSilverData(silverID, new SilverVO(Integer.parseInt(heartRate),Integer.parseInt(walkCount),new Date(Long.parseLong(currentTime)),miBand));
     	
 	}
 

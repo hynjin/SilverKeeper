@@ -1,17 +1,12 @@
 package connection;
 
 import java.io.IOException;
-import java.sql.Date;
 import java.util.HashMap;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import conn.silver.SilverDAO;
-import conn.silver.vo.SilverVO;
 
 /**
  * created by hyunjin
@@ -45,20 +40,9 @@ public class sendSilverData extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		
-		SilverDAO sDAO=SilverDAO.getInstance();
-		
-		dataMap=connect.getData(request, response);
-		
-		String androidID=dataMap.get("androidID");
-		
-		String silverID=sDAO.selectSilverID(androidID);
-		SilverVO[] vo=sDAO.selectSilverData(silverID);
-		
-		
-		dataMap.put("heartRate",vo[0].getHeartRate()+"");
-		dataMap.put("walkCount",vo[0].getWalkCount()+"");
-		dataMap.put("currentTime",vo[0].getCurrentTime().toString());
+		dataMap.put("heartRate","88");
+		dataMap.put("walkCount","232345");
+		dataMap.put("currentTime","2017-05-17");
 		
 		connect.setData(dataMap, request, response);
 	}

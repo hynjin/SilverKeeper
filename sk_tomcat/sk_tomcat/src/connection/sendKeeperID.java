@@ -2,14 +2,11 @@ package connection;
 
 import java.io.IOException;
 import java.util.HashMap;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import conn.keeper.KeeperDAO;
 
 /**
  * created by hyunjin
@@ -43,13 +40,7 @@ public class sendKeeperID extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		KeeperDAO kDAO=KeeperDAO.getInstance();
-		dataMap=connect.getData(request, response);
-		
-		String androidID=dataMap.get("androidID");
-		
-		dataMap.put("keeperID",kDAO.selectKeeperID(androidID));
-		
+		dataMap.put("keeperID","K0004");
 		connect.setData(dataMap, request, response);
 		
 	}

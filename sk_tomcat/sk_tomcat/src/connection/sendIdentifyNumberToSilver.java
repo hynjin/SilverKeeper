@@ -8,8 +8,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import conn.silver.SilverDAO;
-
 /**
  * created by hyunjin
  * connection of server
@@ -42,13 +40,7 @@ public class sendIdentifyNumberToSilver extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		
-		SilverDAO sDAO=SilverDAO.getInstance();
-		String silverID=sDAO.selectSilverID("androidID");
-		int identifyNumber=sDAO.selectIdentifyNumber(silverID);
-		dataMap.put("identifyNumber",identifyNumber+"");
-		dataMap.put("silverID",silverID+"");
-
+		dataMap.put("identifyNumber","1234566");
 		connect.setData(dataMap, request, response);
 	}
 

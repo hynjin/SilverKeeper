@@ -40,7 +40,7 @@ public class receiveBLEStatus extends HttpServlet {
         super();
         // TODO Auto-generated constructor stub
         
-        sDAO =SilverDAO.getInstance();
+        sDAO = new SilverDAO();
         connect = new Connect();
         
     }
@@ -54,20 +54,9 @@ public class receiveBLEStatus extends HttpServlet {
 		HashMap<String,String> dataMap = new HashMap<String,String>();
 		
 		System.out.println("receiveBLEStatus");
-
 		dataMap = connect.getData(request, response);
-		String key=connect.getKey();
-		String androidID=dataMap.get("androidID");
-		String silverID="";
-		String bleStatus=dataMap.get(silverID);
-		if(bleStatus=="o")
-		{
-			sDAO.updateBLEStatus(silverID, true);
-		}
-		else
-			sDAO.updateBLEStatus(silverID, false);
-		/*String db = "update silverMiBandConn set BLESTATUS="+dataMap.get("BLESTATUS")+" where silverID="+dataMap.get("silverID");
-		connect.sendData(db, request, response);*/
+		String db = "update silverMiBandConn set BLESTATUS="+dataMap.get("BLESTATUS")+" where silverID="+dataMap.get("silverID");
+		connect.sendData(db, request, response);
 		
 	}
 

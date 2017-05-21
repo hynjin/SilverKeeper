@@ -8,8 +8,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import conn.silver.SilverDAO;
-
 /**
  * created by hyunjin
  * connection of server
@@ -29,7 +27,7 @@ public class sendConnectRequest extends HttpServlet {
      */
 	private Connect connect;
     private HashMap<String,String> dataMap;
-    private SilverDAO sDAO=SilverDAO.getInstance();
+    
     public sendConnectRequest() {
         super();
         // TODO Auto-generated constructor stub
@@ -42,12 +40,8 @@ public class sendConnectRequest extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		/*
-		 
-		 */
-		
-		/*dataMap.put("keeperName","hong-hong");
+		dataMap.put("keeperName","hong-hong");
 		connect.setData(dataMap, request, response);
-*/	}
+	}
 
 }

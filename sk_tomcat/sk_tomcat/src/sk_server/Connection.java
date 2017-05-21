@@ -46,7 +46,7 @@ public class Connection  extends HttpServlet {
 	        PrintWriter out = response.getWriter();
 	        
 	        
-	       SilverDAO dao=SilverDAO.getInstance();
+	       SilverDAO dao=new SilverDAO();
 	        SilverVO silverVO=new SilverVO(15, 111, new Date(System.currentTimeMillis()), true);
 	        dao.insertSilverData("SV005", silverVO);
 	        

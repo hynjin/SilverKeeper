@@ -10,9 +10,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import conn.keeper.KeeperDAO;
-import conn.silver.SilverDAO;
-
 /**
  * created by hyunjin
  * connection of server
@@ -26,14 +23,14 @@ import conn.silver.SilverDAO;
 
 public class Connect {
 	
-    /*private String dbinfo;
+    private String dbinfo;
 	private String ID;
 	private String pw;
 	private String key;
-	private String value;*/
+	private String value;
+	private String type;
 	private HashMap<String, String> dataMap;
-	/*private static SilverDAO sDAO=SilverDAO.getInstance();
-	private static KeeperDAO kDAO=KeeperDAO.getInstance();*/
+
 
 	
 	public Connect()
@@ -41,31 +38,39 @@ public class Connect {
 		dataMap = new HashMap<String, String>();
        /* try{
         	Class.forName("com.mysql.jdbc.Driver");
-        	dbinfo = "jdbc:oracle:thin:@localhost:1521:xe";
-        	ID = "tybaek";
-        	pw = "ws1541235";
+        	dbinfo = "jdbc:mysql://localhost:3306/dbTest?autoReconnect=true&useSSL=false";
+        	ID = "root";
+        	pw = "root";
         	key = "";
         	value = "";
+        	type = "";
         	
         }catch(ClassNotFoundException e)
         {
         	e.printStackTrace();
         }*/
 	}
-	 
+	
+	public String getType(){
+		return type;
+	}
+	
 	//receive data from client
 	public HashMap<String,String> getData(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException
 	{
 		response.setContentType("text/html");
 		response.setCharacterEncoding("UTF-8");
-		response.getWriter().append("Served at: ").append(request.getContextPath());
-		
-
+		/*response.getWriter().append("Served at: ").append(request.getContextPath());
+		*/
 		Enumeration<String> parameterNames = request.getParameterNames();
 		while (parameterNames.hasMoreElements())
 		{
 			String name = (String) parameterNames.nextElement();
-			dataMap.put(name, request.getParameter(name));
+			System.out.println("nameTesting..:"+name);
+			if(name.equals("getMethod"))
+				type = request.getParameter(name);
+			else
+				dataMap.put(name, request.getParameter(name));
 			System.out.println(name + "=" + request.getParameter(name));
         } 
 		return dataMap;
@@ -146,7 +151,7 @@ public class Connect {
 	public void sendData(String db ,HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException
 	{
 		
-		/*try{
+		try{
         	
         	java.sql.Connection conn = java.sql.DriverManager.getConnection(dbinfo,ID,pw);
         	java.sql.Statement stmt = conn.createStatement();
@@ -162,7 +167,7 @@ public class Connect {
         catch(Exception e)
         {
         	e.printStackTrace();
-        }*/
+        }
         
 		PrintWriter out = response.getWriter();
 		System.out.println(db);
@@ -173,7 +178,7 @@ public class Connect {
 	public String receiveData(String db ,HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException
 	{
 		String str = "";
-		/*try{
+		try{
         	
         	java.sql.Connection conn = java.sql.DriverManager.getConnection(dbinfo,ID,pw);
         	java.sql.Statement stmt = conn.createStatement();
@@ -190,7 +195,7 @@ public class Connect {
         catch(Exception e)
         {
         	e.printStackTrace();
-        }*/
+        }
         
 		PrintWriter out = response.getWriter();
 		System.out.println(db);

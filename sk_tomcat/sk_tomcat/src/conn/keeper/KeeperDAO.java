@@ -14,16 +14,16 @@ public class KeeperDAO implements Serializable{
 	private static final long serialVersionUID=-5542359229673091405L;
 	private DBConnectionModule connModule;
 	private Connection conn;
-	private static KeeperDAO keeperDAO=new KeeperDAO();
-	private KeeperDAO()
+	//private KeeperDAO keeperDAO;
+	public KeeperDAO()
 	{
 		connModule=DBConnectionModule.getInstance();
 		conn=connModule.getConn();
 	}
-	public static KeeperDAO getInstance()
+/*	public static KeeperDAO getInstance()
 	{
 		return keeperDAO;
-	}
+	}*/
 /*	public int insert(String silverID)
 	{
 		int rowNum = 0;
@@ -296,10 +296,12 @@ public class KeeperDAO implements Serializable{
 			while(rs.next())
 			{
 				keeperID=rs.getString("keeperID");
+				
 				if(keeperID.contains(androidID))
 				{
 					break;
 				}
+				keeperID="";
 			}
 		} 
 		catch (SQLException se) 
