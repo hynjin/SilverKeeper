@@ -39,9 +39,11 @@ public class DBConnectionModule implements Serializable{
 		}
 		catch(ClassNotFoundException ce){
 			System.out.println(ce.getMessage());
+			System.out.println("클래스없음\n");
 		}
 		catch(SQLException se){
 			System.out.println(se.getMessage());
+			System.out.println("SQL 오류\n");
 		}
 	}
 	public void disconnect(){

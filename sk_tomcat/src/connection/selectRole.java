@@ -61,8 +61,8 @@ public class selectRole extends HttpServlet {
 		dataMap = connect.getData(request, response);
 		
 		//태영추가 
-		SilverDAO sDAO=SilverDAO.getInstance();
-		
+		SilverDAO sDAO =new SilverDAO();
+		String key=connect.getKey();
 		String androidID=dataMap.get("andoridID");
 		if(sDAO.selectSilverID(androidID)=="noData")
 		{

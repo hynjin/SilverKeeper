@@ -8,6 +8,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import conn.silver.SilverDAO;
+
 /**
  * created by hyunjin
  * connection of server
@@ -44,6 +46,12 @@ public class receiveSilverToken extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		dataMap = connect.getData(request, response);
+		String key=connect.getKey();
+		String androidID=dataMap.get("androidID");
+		SilverDAO sDAO =new SilverDAO();
+		String silverID=sDAO.selectSilverID(androidID);
+		String sToken=dataMap.get("silverToken");
+		sDAO.updateSilverToken(silverID, sToken);
 		//String db = "insert into silverData("+connect.getKey()+") values("+connect.getValue()+")";
     	//connect.sendData(db, request, response);
 		

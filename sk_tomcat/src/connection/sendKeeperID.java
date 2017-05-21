@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import conn.keeper.KeeperDAO;
+import conn.silver.SilverDAO;
 
 /**
  * created by hyunjin
@@ -43,10 +44,13 @@ public class sendKeeperID extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		KeeperDAO kDAO=KeeperDAO.getInstance();
-		String androidID="";//안드로이드 ID 얻어오는 연산 필요!
+		KeeperDAO kDAO =new KeeperDAO();
+		dataMap=connect.getData(request, response);
+		
+		String androidID=dataMap.get("androidID");
 		
 		dataMap.put("keeperID",kDAO.selectKeeperID(androidID));
+		
 		connect.setData(dataMap, request, response);
 		
 	}

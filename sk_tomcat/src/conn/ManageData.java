@@ -11,8 +11,8 @@ import conn.silver.vo.SilverVO;
 
 
 public class ManageData {
-   private SilverDAO sDao=SilverDAO.getInstance();
-   private KeeperDAO kDao=KeeperDAO.getInstance();
+   private SilverDAO sDao=new SilverDAO();
+   private KeeperDAO kDao=new KeeperDAO();
    private static ManageData mData=new ManageData();
    /*private ServerConnection con;*/
    

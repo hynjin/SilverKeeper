@@ -43,12 +43,12 @@ public class sendIdentifyNumberToSilver extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		
-		SilverDAO sDAO=SilverDAO.getInstance();
+		SilverDAO sDAO =new SilverDAO();
 		String silverID=sDAO.selectSilverID("androidID");
 		int identifyNumber=sDAO.selectIdentifyNumber(silverID);
 		dataMap.put("identifyNumber",identifyNumber+"");
-		
-		
+		dataMap.put("silverID",silverID+"");
+
 		connect.setData(dataMap, request, response);
 	}
 

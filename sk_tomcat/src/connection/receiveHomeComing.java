@@ -37,7 +37,7 @@ public class receiveHomeComing extends HttpServlet {
         super();
         // TODO Auto-generated constructor stub
 
-        sDAO =SilverDAO.getInstance();
+        sDAO =new SilverDAO();
         
        connect = new Connect();
     }
@@ -48,11 +48,10 @@ public class receiveHomeComing extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		System.out.println("receiveHomeComing");
-		
-		connect.getData(request, response);
-		String silverID=sDAO.selectSilverID("androidID");
-		
 		dataMap = connect.getData(request, response);
+		String key=connect.getKey();
+		String androidID=dataMap.get("androidID");
+		String silverID=sDAO.selectSilverID(androidID);
 		String bleStatus=dataMap.get(silverID);
 		if(bleStatus=="o")
 		{

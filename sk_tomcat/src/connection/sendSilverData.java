@@ -46,8 +46,12 @@ public class sendSilverData extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		
-		SilverDAO sDAO=SilverDAO.getInstance();
-		String androidID="";//실버 Android ID 받아오는 연산 필요.
+		SilverDAO sDAO =new SilverDAO();
+		
+		dataMap=connect.getData(request, response);
+		
+		String androidID=dataMap.get("androidID");
+		
 		String silverID=sDAO.selectSilverID(androidID);
 		SilverVO[] vo=sDAO.selectSilverData(silverID);
 		

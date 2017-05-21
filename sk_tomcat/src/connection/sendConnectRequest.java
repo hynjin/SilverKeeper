@@ -29,7 +29,7 @@ public class sendConnectRequest extends HttpServlet {
      */
 	private Connect connect;
     private HashMap<String,String> dataMap;
-    private SilverDAO sDAO=SilverDAO.getInstance();
+    private SilverDAO sDAO =new SilverDAO();
     public sendConnectRequest() {
         super();
         // TODO Auto-generated constructor stub

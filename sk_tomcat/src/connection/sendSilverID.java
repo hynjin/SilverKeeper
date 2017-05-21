@@ -40,6 +40,7 @@ public class sendSilverID extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		
 		dataMap.put("silverID","S0001");
 		connect.setData(dataMap, request, response);
 	}

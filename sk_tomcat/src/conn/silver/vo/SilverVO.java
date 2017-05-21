@@ -19,7 +19,7 @@ this.walkCount=0;
 this.currentTime=new Date(System.currentTimeMillis());
 this.checkMiBand=true;
 }
-public SilverVO(int heartRate, int walkCount, int identifyNumber,Date currentTime,boolean checkMiBand)
+public SilverVO(int heartRate, int walkCount,Date currentTime,boolean checkMiBand)
 {
 
 this.heartRate=heartRate;

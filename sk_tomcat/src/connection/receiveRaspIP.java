@@ -8,6 +8,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import conn.silver.SilverDAO;
+
 /**
  * created by hyunjin
  * connection of server
@@ -47,8 +49,12 @@ public class receiveRaspIP extends HttpServlet {
 		dataMap = connect.getData(request, response); 
 		//String db = "insert into silverAddress("+connect.getKey()+") values("+connect.getValue()+")";
     	//connect.sendData(db, request, response);
-		String silverID=connect.getKey();
-		
+		String key=connect.getKey();
+		String androidID=dataMap.get("androidID");
+		SilverDAO sDAO =new SilverDAO();
+		String silverID=sDAO.selectSilverID(androidID);
+		String raspIP=dataMap.get(silverID);
+		sDAO.insertSilverAddress(silverID, raspIP, "", "");
 	}
 
 }

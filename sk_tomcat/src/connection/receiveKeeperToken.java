@@ -30,7 +30,7 @@ public class receiveKeeperToken extends HttpServlet {
      */
 	private Connect connect;
     private HashMap<String,String> dataMap;
-    private KeeperDAO kDAO=KeeperDAO.getInstance();
+    private KeeperDAO kDAO=new KeeperDAO();
     public receiveKeeperToken() {
         super();
         // TODO Auto-generated constructor stub
@@ -48,9 +48,10 @@ public class receiveKeeperToken extends HttpServlet {
 		/*String db = "insert into keeperData("+connect.getKey()+") values("+connect.getValue()+")";
     	connect.sendData(db, request, response);*/
 		
-		//태영추가 0518 1515
-    	String keeperID=connect.getKey();
-		String keeperToken=connect.getValue();
+		String key=connect.getKey();
+		String androidID=dataMap.get("androidID");
+    	String keeperID=kDAO.selectKeeperID(androidID);
+		String keeperToken=dataMap.get("keeperToken");
 		kDAO.updateKeeperToken(keeperID, keeperToken);
 		
 	}

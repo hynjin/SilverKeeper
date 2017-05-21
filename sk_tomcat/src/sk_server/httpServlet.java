@@ -1,7 +1,7 @@
 package sk_server;
 
-import java.io.PrintWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.Date;
 
 import javax.servlet.ServletException;
@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import conn.silver.SilverDAO;
+import conn.silver.SilverDBManager;
 import conn.silver.vo.SilverVO;
 
 /**
@@ -44,16 +44,19 @@ public class httpServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
         
         
-       SilverDAO dao=SilverDAO.getInstance();
-        SilverVO silverVO=new SilverVO(15, 111, 0, new Date(System.currentTimeMillis()), true);
-        dao.insertSilverData("SV005", silverVO);
+       /*SilverDAO dao=new SilverDAO();*/
+        SilverDBManager dbm=new SilverDBManager();
+        SilverVO silverVO=new SilverVO(15, 111, new Date(System.currentTimeMillis()), true);
+        System.out.println(silverVO.toString());
+        System.out.println("테스트중:"+dbm.searchSilverIdentifyNumber("SV005"));
+        dbm.insertSilverData("SV005", silverVO);
         
         
-        out.print("아이디="+id);
+        /*out.print("아이디="+id);
         out.print("비밀번호="+passwd+"<br>");
         out.print("silverID="+silver+"<br>");
         out.print("heartRate="+heart+"<br>");
-        out.print("stepCnt="+step+"<br>");
+        out.print("stepCnt="+step+"<br>");*/
         System.out.println("아이디="+id+"<br>");
         System.out.println("비밀번호="+passwd+"<br>");
         System.out.println("silverID="+silver+"<br>");
