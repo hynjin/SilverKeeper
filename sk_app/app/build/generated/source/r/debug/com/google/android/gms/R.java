@@ -12,9 +12,8 @@ public final class R {
         public static final int normal = 0x7f0b0013;
         public static final int progressBar = 0x7f0b0060;
         public static final int radio = 0x7f0b0048;
-        public static final int test = 0x7f0b0092;
-        public static final int text = 0x7f0b008c;
-        public static final int text2 = 0x7f0b008a;
+        public static final int text = 0x7f0b008b;
+        public static final int text2 = 0x7f0b0089;
         public static final int wrap_content = 0x7f0b0021;
     }
     public static final class integer {

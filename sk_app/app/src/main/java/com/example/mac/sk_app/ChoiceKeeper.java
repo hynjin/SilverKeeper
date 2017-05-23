@@ -9,6 +9,7 @@ import android.view.View;
  * Created by 차민광01027370165 on 2017-05-11.
  */
 
+//보호자를 선택했을 때 보호자 선택을 확인하는 액티비티
 public class ChoiceKeeper extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,3 +28,4 @@ public class ChoiceKeeper extends AppCompatActivity {
         finish();
     }
 }
+

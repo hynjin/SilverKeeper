@@ -9,20 +9,20 @@ import android.view.View;
  * Created by 차민광01027370165 on 2017-05-23.
  */
 
-//생체데이터 제공을 동의하는 액티비티
-public class AgreeData extends AppCompatActivity {
+//키퍼가 인증을 완료해서 실버와의 연결을 성공했음을 알리는 액티비티
+public class SuccessVerification extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.agree_data);
+        setContentView(R.layout.success_verification);
     }
     public void ok(View view) {
-        Intent intent = new Intent(this, InputRasp.class);
+        Intent intent = new Intent(this, ViewKdata.class);
         startActivity(intent);
 
         finish();
     }
     public void cancel(View view) {
-        Intent intent = new Intent(this, ChoiceRole.class);
+        Intent intent = new Intent(this, InputKeeper.class);
         startActivity(intent);
 
         finish();

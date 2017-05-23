@@ -3,27 +3,16 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFFFFF">
-
-    <!--라즈베리파이 MAC주소 입력(실버 화면)-->
+    <!--라즈베리파이 인증 성공(실버 화면)-->
     <TextView
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="50dp"
         android:layout_gravity="center_horizontal"
         android:textSize="20dp"
         android:textColor="#000000"
-        android:text="라즈베리파이의 MAC주소" />
-
-    <EditText
-        android:id="@+id/raspMAC"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="30dp"
-        android:ems="20"
-        android:hint="문자만 입력하시오" />
-
+        android:text="보호자로서의 인증을 완료하였습니다." />
     <Button
         android:id="@+id/ok"
         android:layout_width="wrap_content"
@@ -34,7 +23,6 @@
         android:text="확인"
         android:textColor="#000000"
         android:textSize="20dp" />
-
     <Button
         android:id="@+id/cancel"
         android:layout_width="wrap_content"
@@ -45,6 +33,4 @@
         android:text="취소"
         android:textColor="#000000"
         android:textSize="20dp" />
-
-
 </LinearLayout>
