@@ -1,6 +1,6 @@
 [
     {
-        "outputFile": "/Users/mac/Documents/SilverKeeper/sk_app/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values-be/values-be.xml",
+        "outputFile": "C:\\test\\sk_app\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-be\\values-be.xml",
         "map": [
             {
                 "to": {
@@ -11,31 +11,7 @@
                     "endOffset": 305
                 },
                 "from": {
-                    "file": "/Users/mac/.android/build-cache/68fcfb4ecf633fa3c7c801ab27b245778e57a30b/output/res/values-be/values.xml",
-                    "position": {
-                        "startLine": 4,
-                        "startColumn": 0,
-                        "startOffset": 285,
-                        "endColumn": 204,
-                        "endOffset": 489
-                    }
-                }
-            }
-        ]
-    },
-    {
-        "outputFile": "/Users/mac/Documents/SilverKeeper/sk_app/C:\\sk_app\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-be\\values-be.xml",
-        "map": [
-            {
-                "to": {
-                    "startLine": 2,
-                    "startColumn": 4,
-                    "startOffset": 105,
-                    "endColumn": 204,
-                    "endOffset": 305
-                },
-                "from": {
-                    "file": "/Users/mac/Documents/SilverKeeper/sk_app/C:\\Users\\백태영\\.android\\build-cache\\572b40d5594e2268880050994bf2729b3e4cf1ea\\output\\res\\values-be\\values.xml",
+                    "file": "C:\\Users\\백태영\\.android\\build-cache\\572b40d5594e2268880050994bf2729b3e4cf1ea\\output\\res\\values-be\\values.xml",
                     "position": {
                         "startLine": 4,
                         "startColumn": 0,
