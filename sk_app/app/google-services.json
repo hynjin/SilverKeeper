@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "33097841377",
+    "firebase_url": "https://silverkeeper-ce4ae.firebaseio.com",
+    "project_id": "silverkeeper-ce4ae",
+    "storage_bucket": "silverkeeper-ce4ae.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:33097841377:android:a15af1ff1b089a82",
+        "android_client_info": {
+          "package_name": "com.example.mac.sk_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "33097841377-79l0q396rnue3oge615v16s00bsl2fg9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDGNkla2qZai0uk2Jed83DsLIFB3ICvB7c"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

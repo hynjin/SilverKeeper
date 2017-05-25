@@ -15,7 +15,7 @@
         android:text="실버 인증번호 입력" />
 
     <EditText
-        android:id="@+id/idNumber"
+        android:id="@+id/identifyNumber"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"

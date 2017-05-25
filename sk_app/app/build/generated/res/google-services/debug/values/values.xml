@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="default_web_client_id" translatable="false">33097841377-79l0q396rnue3oge615v16s00bsl2fg9.apps.googleusercontent.com</string>
+    <string name="firebase_database_url" translatable="false">https://silverkeeper-ce4ae.firebaseio.com</string>
+    <string name="gcm_defaultSenderId" translatable="false">33097841377</string>
+    <string name="google_api_key" translatable="false">AIzaSyDGNkla2qZai0uk2Jed83DsLIFB3ICvB7c</string>
+    <string name="google_app_id" translatable="false">1:33097841377:android:a15af1ff1b089a82</string>
+    <string name="google_crash_reporting_api_key" translatable="false">AIzaSyDGNkla2qZai0uk2Jed83DsLIFB3ICvB7c</string>
+    <string name="google_storage_bucket" translatable="false">silverkeeper-ce4ae.appspot.com</string>
+</resources>

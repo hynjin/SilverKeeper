@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 
+//로딩 화면
 public class Loading extends AppCompatActivity {
 
     @Override
@@ -18,10 +19,10 @@ public class Loading extends AppCompatActivity {
         Handler handler = new Handler() {
             public void handleMessage(Message msg) {
                 super.handleMessage(msg);
-                startActivity(new Intent(Loading.this, ChoiceRole.class));
+                startActivity(new Intent(Loading.this, ChoiceRole.class));  //3초 동안 화면에 나타난 후에 역할 선택 액티비티로 이동
                 finish();
             }
         };
-        handler.sendEmptyMessageDelayed(0, 3000);
+        handler.sendEmptyMessageDelayed(0, 3000);       //3초 동안 화면에 나타냄
     }
 }
