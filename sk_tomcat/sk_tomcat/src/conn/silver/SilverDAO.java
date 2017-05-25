@@ -71,7 +71,7 @@ public class SilverDAO {
 		int rowNum = 0;
 		
 		int walkCount=silverVO.getWalkCount();
-		int heartRate=silverVO.getWalkCount();
+		int heartRate=silverVO.getHeartRate();
 		/*int identifyNumber=silverVO.getIdentifyNumber();*/
 		String currentTime=silverVO.getCurrentTime();
 		boolean checkMiBand=silverVO.getCheckMiBand();
@@ -639,8 +639,9 @@ public class SilverDAO {
 			
 			ResultSet rs=pstmt.executeQuery();
 			int i=0;
-			while(i==6)
-			{	if(!rs.next())
+			while(rs.next())
+			{	
+				if(i==6)
 				{
 					break;
 				}
@@ -652,7 +653,8 @@ public class SilverDAO {
 				{
 					connMiBand=false;
 				}
-				voList.add(new SilverVO(walkCount,heartRate,currentTime,connMiBand));
+				voList.add(new SilverVO(heartRate,walkCount,currentTime,connMiBand));
+				i++;
 			}
 		} 
 		catch (SQLException se) 
@@ -700,7 +702,6 @@ public class SilverDAO {
 				int min=rs.getInt("minHeartRate");
 				String currentTime=rs.getString("currentTime");
 				list.add(new SilverHeartRateVO(max, min, currentTime));
-				
 			}
 		} 
 		catch (SQLException se) 
@@ -1094,11 +1095,11 @@ public class SilverDAO {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		SilverDAO dao=new SilverDAO();
-		SilverVO voTest=new SilverVO(35,60,(new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss")).format(new Date(System.currentTimeMillis())),true);
-		SilverHeartRateVO hrTest=new SilverHeartRateVO(150, 78, (new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss")).format(new Date(System.currentTimeMillis())));
+		SilverVO voTest=new SilverVO(35,60,(new SimpleDateFormat("yyyy-MM-dd-hh-mm-ss")).format(new Date(System.currentTimeMillis())),true);
+		SilverHeartRateVO hrTest=new SilverHeartRateVO(150, 78, (new SimpleDateFormat("yyyy-MM-dd-hh-mm-ss")).format(new Date(System.currentTimeMillis())));
 		System.out.println(dao.insertSilverData("SV005",voTest)+"\n");
 		System.out.println(dao.insertHeartRate("SV005",hrTest)+"\n");
-		System.out.println(dao.insertHeartRate("SV005",190,50,(new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss")).format(new Date(System.currentTimeMillis())))+"\n");
+		System.out.println(dao.insertHeartRate("SV005",190,50,(new SimpleDateFormat("yyyy-MM-dd-hh-mm-ss")).format(new Date(System.currentTimeMillis())))+"\n");
 		 
 		System.out.println("test : "+dao.checkIdentifyNumber(1424));
 	}

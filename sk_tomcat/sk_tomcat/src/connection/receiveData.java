@@ -143,8 +143,13 @@ public class receiveData extends HttpServlet {
 			break;
 		case "sendSilverData" ://실버로부터 식별번호를 받아, 해당 정보를 보내는 연산
 			sendSilverDataProcess(dataMap,request,response);
+			break;
 		case "receiveSilverData": //실버로부터 실버의 생체데이터를 받아 수집하여 계산하는 연산.
 			receiveSilverDataProcess(dataMap,request,response);
+			break;
+		case "checkEmergency":
+			checkSilverEmergencyStatusProcess(dataMap,request,response);
+			break;
 		}
 	}
 	protected void checkJoinProcess(HashMap<String,String> dataMap,HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
@@ -211,7 +216,6 @@ public class receiveData extends HttpServlet {
 		System.out.println("silverID="+silverID+"\n");
 		SilverVO vo=sDAO.selectSilverData(silverID);
 		int identifyNumber=sDAO.selectIdentifyNumber(silverID);
-		
 		int walkCount=vo.getWalkCount();
 		int heartRate=vo.getHeartRate();
 		String currentTime=vo.getCurrentTime();
@@ -231,6 +235,8 @@ public class receiveData extends HttpServlet {
 		sendMap.put("currentTime", currentTime);
 		sendMap.put("connMiBand",connMiBand+"");
 		sendMap.put("identifyNumber", identifyNumber+"");
+		
+		connect.setData(sendMap, request, response);
 	}
 	protected void receiveSilverDataProcess(HashMap<String,String> dataMap,HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
 	{
@@ -239,6 +245,13 @@ public class receiveData extends HttpServlet {
 		String heartRate=dataMap.get("heartRate");
 		String currentTime=dataMap.get("currentTime");
 		String connMiBand=dataMap.get("connMiBand");
+		System.out.println("---------------------receiveSilverDataProcess----------------\n");
+		System.out.println("silverID:"+silverID+"\n");
+		System.out.println("walkCount:"+walkCount+"\n");
+		System.out.println("heartRate:"+heartRate+"\n");
+		System.out.println("currentTime:"+currentTime+"\n");
+		System.out.println("connMiBand:"+connMiBand);
+		System.out.println("----------------------------------------------------------\n");
 		boolean conn;
 		if(connMiBand.contains("true"))
 		{
@@ -257,16 +270,42 @@ public class receiveData extends HttpServlet {
 			sendMap.put("insertResult", "fail");
 		connect.setData(sendMap, request, response);
 	}
-	protected void sendSilverEmergencyStatusProcess(HashMap<String,String>dataMap,HttpServletRequest request,HttpServletResponse response)throws ServletException, IOException
+	protected void checkSilverEmergencyStatusProcess(HashMap<String,String>dataMap,HttpServletRequest request,HttpServletResponse response)throws ServletException, IOException
 	{
 		String silverID=dataMap.get("silverID");
+		System.out.println("----------------checkEmergency--------------------\n");
+		System.out.println("silverID:"+silverID+"\n");
 		SilverHeartRateVO[] hrList=sDAO.selectSilverHeartRateVO(silverID);
 		SilverVO[] voList=sDAO.selectFixtedNumberSilverDataArray(silverID);
+		HashMap<String,String> sendMap=new HashMap<String,String>();
 		ManageData manage=new ManageData();
+		
+		System.out.println("hrList length:"+hrList.length+"\n");
+		System.out.println("voList length:"+voList.length+"\n");
 		int result=manage.checkEmergencyLevel(hrList, voList);
 		
+		String status;
+		System.out.println("Result:"+result+"\n");
+		if(result<50)
+		{
+			 status="emergency";
+		}
+		else if(result>=50&&result<=69)
+		{
+			status="warning";
+		}
+		else if(result>70)
+		{
+			status="safe";
+		}
+		else
+		{
+			status="error";
+		}
+		System.out.println("status:"+status+"\n");
+		sendMap.put("status",status);
 		//SilverHeartRateVO[] voList=sDAO.selectSilverHeartRateVO(silverID);
-		
+		connect.setData(sendMap, request, response);
 	}
 	public void setHeartRateData(String silverID)
 	{
@@ -276,9 +315,13 @@ public class receiveData extends HttpServlet {
 		ArrayList<Integer>maxList=new ArrayList<Integer>();
 		ArrayList<Integer>minList=new ArrayList<Integer>();
 		
-		int	temp=0,max=0,min=0,length=voList.length;
+		int	temp=0,max=0,min=1000,length=voList.length;
 		
-			for(int x=0;x<6;x++)
+		if(length==0)
+		{
+			return;
+		}
+			for(int x=0;x<length;x++)
 			{
 				
 				temp=voList[x].getHeartRate();
@@ -287,18 +330,17 @@ public class receiveData extends HttpServlet {
 					max=temp;
 					
 				}
-				else if(min>temp)
+
+			}
+			for(int y=0;y<length;y++)
+			{
+				temp=voList[y].getHeartRate();
+				if(min>temp)
 				{
 					min=temp;
-					
-					
 				}
-				if(x==voList.length-1)
-				{
-					break;
-				}
+			
 			}
-
 			sDAO.insertHeartRate(silverID, min, max, (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")).format(new Date(System.currentTimeMillis())));
 
 	}

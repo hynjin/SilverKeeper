@@ -85,8 +85,9 @@ public class ManageData {
       for(int i=0;i<cnt;i++)
       {
         sumMin+=hrData[i].getMinHeartRate(); //최소 심박수값들을 저장.
+        
       }
-   
+      
       return sumMin/cnt;
    }
    public int checkEmergencyLevel(SilverHeartRateVO[] hrData, SilverVO[] sData)
@@ -96,20 +97,31 @@ public class ManageData {
          minAver=this.calcMinAverHeartRate(hrData),
          rate=0,result=0;
       int cnt=sData.length;
+      System.out.println("----------checkEmergencyLevel-----------\n");
+      System.out.println("maxAver="+maxAver+"\n");
+      System.out.println("minAver="+minAver+"\n");
+      System.out.println("cnt="+cnt+"\n");
+      
       for(int i=0;i<cnt;i++)
       {
          int heartRate=sData[i].getHeartRate();
+         System.out.println("heartRate:"+heartRate+"\n");
          if(heartRate>maxAver)
          {
             rate++;
+            System.out.println("rate:"+rate+"\n");
          }
          else if(heartRate<minAver)
          {
             rate++;
+            System.out.println("rate:"+rate+"\n");
          }
       }
-      result=rate/cnt;
-      return status;
+      
+      result=100*(cnt-rate)/cnt;
+      System.out.println("result:"+result+"\n");
+      System.out.println("------------------------------------------\n");
+      return result;
    }
    public byte calcEmergencyRate(SilverHeartRateVO[] hrData, SilverVO[] sData)
    {
