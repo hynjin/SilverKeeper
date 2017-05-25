@@ -6,15 +6,15 @@ import java.sql.Date;
 public class SilverHeartRateVO {
 	private int maxHeartRate;
 	private int minHeartRate;
-	private Date currentTime;
+	private String currentTime;
 	
 	public SilverHeartRateVO() 
 	{
 		this.maxHeartRate = -1;
 		this.minHeartRate = -1;
-		this.currentTime=new Date(System.currentTimeMillis());
+		this.currentTime="";
 	}
-	public SilverHeartRateVO(int maxHeartRate, int minHeartRate,Date currentTime) 
+	public SilverHeartRateVO(int maxHeartRate, int minHeartRate,String currentTime) 
 	{
 		
 		this.maxHeartRate = maxHeartRate;
@@ -34,10 +34,10 @@ public class SilverHeartRateVO {
 	public void setMinHeartRate(int minHeartRate) {
 		this.minHeartRate = minHeartRate;
 	}
-	public Date getCurrentTime() {
+	public String getCurrentTime() {
 		return currentTime;
 	}
-	public void setCurrentTime(Date currentTime) {
+	public void setCurrentTime(String currentTime) {
 		this.currentTime = currentTime;
 	}
 	@Override

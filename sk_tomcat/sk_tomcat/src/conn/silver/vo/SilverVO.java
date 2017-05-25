@@ -1,5 +1,6 @@
 package conn.silver.vo;
 import java.sql.*;
+import java.text.SimpleDateFormat;
 
 public class SilverVO {
 
@@ -7,7 +8,7 @@ private int heartRate;
 private int walkCount;
 //private int identifyNumber;
 //private int currentTime;
-private Date currentTime;
+private String currentTime;
 private boolean checkMiBand;
 
 public SilverVO()
@@ -16,10 +17,10 @@ public SilverVO()
 this.heartRate=1;
 this.walkCount=0;
 //this.identifyNumber=0;
-this.currentTime=new Date(System.currentTimeMillis());
+this.currentTime=(new SimpleDateFormat("yyyy-mm-dd-hh-mm-ss")).format(new Date(System.currentTimeMillis()));
 this.checkMiBand=true;
 }
-public SilverVO(int heartRate, int walkCount,Date currentTime,boolean checkMiBand)
+public SilverVO(int heartRate, int walkCount,String currentTime,boolean checkMiBand)
 {
 
 this.heartRate=heartRate;
@@ -57,10 +58,10 @@ return;
 /*public int getCurrentTime() {
 return currentTime;
 }*/
-public Date getCurrentTime() {
+public String getCurrentTime() {
 return currentTime;
 }
-public void setCurrentTime(Date currentTime) {
+public void setCurrentTime(String currentTime) {
 this.currentTime = currentTime;
 }
 public boolean getCheckMiBand()

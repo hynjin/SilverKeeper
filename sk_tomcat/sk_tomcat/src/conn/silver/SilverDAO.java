@@ -73,7 +73,7 @@ public class SilverDAO {
 		int walkCount=silverVO.getWalkCount();
 		int heartRate=silverVO.getWalkCount();
 		/*int identifyNumber=silverVO.getIdentifyNumber();*/
-		Date currentTime=silverVO.getCurrentTime();
+		String currentTime=silverVO.getCurrentTime();
 		boolean checkMiBand=silverVO.getCheckMiBand();
 		PreparedStatement pstmt = null;
 		try{
@@ -84,7 +84,8 @@ public class SilverDAO {
 			pstmt.setInt(2, walkCount);
 			pstmt.setInt(3, heartRate);
 			/*pstmt.setInt(4, identifyNumber);*/
-			pstmt.setDate(4, currentTime);
+			//SimpleDateFormat sdf=new SimpleDateFormat("yyyy-mm-dd-hh-mm-ss");
+			pstmt.setString(4, currentTime);
 			int check=0;
 			if(checkMiBand)
 			{
@@ -128,7 +129,7 @@ public class SilverDAO {
 									silverHeartRate.getCurrentTime()
 									);
 	}
-	public int insertHeartRate(String silverID, int minHeartRate,int maxHeartRate,Date currentTime)
+	public int insertHeartRate(String silverID, int minHeartRate,int maxHeartRate,String currentTime)
 	{
 		int rowNum = 0;
 		PreparedStatement pstmt = null;
@@ -138,9 +139,9 @@ public class SilverDAO {
 			
 			pstmt.setInt(1, maxHeartRate);
 			pstmt.setInt(2, minHeartRate);
-			SimpleDateFormat transFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			String date=transFormat.format(currentTime);
-			pstmt.setString(3,date);
+			//SimpleDateFormat transFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			//String date=transFormat.format(currentTime);
+			pstmt.setString(3,currentTime);
 			pstmt.setString(4, silverID);	
 			rowNum = pstmt.executeUpdate();
 		}
@@ -248,7 +249,7 @@ public class SilverDAO {
 		int walkCount=silverVO.getWalkCount();
 		int heartRate=silverVO.getWalkCount();
 		/*int identifyNumber=silverVO.getIdentifyNumber();*/
-		Date currentTime=silverVO.getCurrentTime();
+		String currentTime=silverVO.getCurrentTime();
 		boolean checkMiBand=silverVO.getCheckMiBand();
 		PreparedStatement pstmt = null;
 		try{
@@ -259,7 +260,7 @@ public class SilverDAO {
 			pstmt.setInt(2, walkCount);
 			pstmt.setInt(3, heartRate);
 			/*pstmt.setInt(4, identifyNumber);*/
-			pstmt.setDate(4, currentTime);
+			pstmt.setString(4, currentTime);
 			int check=0;
 			if(checkMiBand)
 			{
@@ -524,13 +525,13 @@ public class SilverDAO {
 	
 	//������ �˻�
 	
-	public SilverVO[] selectSilverData(String silverID)
+	public SilverVO[] selectSilverDataArray(String silverID)
 	{
 		ArrayList<SilverVO> voList=new ArrayList<SilverVO>();
 		PreparedStatement pstmt=null;
 		try 
 		{
-			String sql="select walkCount,heartRate,currentTime,connMiBand from silverData where silverID=?";
+			String sql="select walkCount,heartRate,currentTime,connMiBand from silverData where silverID=? order by currentTime desc";
 			pstmt=conn.prepareStatement(sql);
 			pstmt.setString(1,silverID);
 			
@@ -539,7 +540,113 @@ public class SilverDAO {
 			{
 				int walkCount=rs.getInt("walkCount");
 				int heartRate=rs.getInt("heartRate");
-				Date currentTime=rs.getDate("currentTime");
+				String currentTime=rs.getString("currentTime");
+				boolean connMiBand=true;
+				if(rs.getInt("connMiBand")==0)
+				{
+					connMiBand=false;
+				}
+				voList.add(new SilverVO(walkCount,heartRate,currentTime,connMiBand));
+			}
+		} 
+		catch (SQLException se) 
+		{
+			se.printStackTrace();
+			// TODO: handle exception
+		}
+		catch (Exception e) 
+		{
+			e.printStackTrace();
+		}
+		finally
+		{
+			try 
+			{
+				if(pstmt!=null)
+				{
+					pstmt.close();
+				}
+				
+			} 
+			catch (SQLException se) {
+				{
+					se.printStackTrace();
+				}
+			}
+		}
+		return voList.toArray(new SilverVO[voList.size()]);
+	}
+	//데이터 1개 꺼내오는 연산 추가-태영 0524 2236
+	public SilverVO selectSilverData(String silverID)
+	{
+		SilverVO vo=new SilverVO();
+		PreparedStatement pstmt=null;
+		try 
+		{
+			String sql="select walkCount,heartRate,currentTime,connMiBand from silverData where silverID=? order by currentTime desc";
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setString(1,silverID);
+			
+			ResultSet rs=pstmt.executeQuery();
+				rs.next();
+				int walkCount=rs.getInt("walkCount");
+				int heartRate=rs.getInt("heartRate");
+				String currentTime=rs.getString("currentTime");
+				boolean connMiBand=true;
+				if(rs.getInt("connMiBand")==0)
+				{
+					connMiBand=false;
+				}
+				vo=new SilverVO(walkCount,heartRate,currentTime,connMiBand);
+			
+		} 
+		catch (SQLException se) 
+		{
+			se.printStackTrace();
+			// TODO: handle exception
+		}
+		catch (Exception e) 
+		{
+			e.printStackTrace();
+		}
+		finally
+		{
+			try 
+			{
+				if(pstmt!=null)
+				{
+					pstmt.close();
+				}
+				
+			} 
+			catch (SQLException se) {
+				{
+					se.printStackTrace();
+				}
+			}
+		}
+		return vo;
+	}
+	public SilverVO[] selectFixtedNumberSilverDataArray(String silverID)
+	{
+		ArrayList<SilverVO> voList=new ArrayList<SilverVO>();
+		PreparedStatement pstmt=null;
+		try 
+		{
+			String sql="select walkCount,heartRate,currentTime,connMiBand from silverData where silverID=? order by currentTime desc";
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setString(1,silverID);
+			
+			ResultSet rs=pstmt.executeQuery();
+			int i=0;
+			while(i==6)
+			{	if(!rs.next())
+				{
+					break;
+				}
+				int walkCount=rs.getInt("walkCount");
+				int heartRate=rs.getInt("heartRate");
+				String currentTime=rs.getString("currentTime");
 				boolean connMiBand=true;
 				if(rs.getInt("connMiBand")==0)
 				{
@@ -579,9 +686,10 @@ public class SilverDAO {
 	{
 		ArrayList<SilverHeartRateVO> list=new ArrayList<SilverHeartRateVO>();
 		PreparedStatement pstmt=null;
+		int i=0;
 		try 
 		{
-			String sql="select maxHeartRate,minHeartRate,currentTime from silverHeartRate where silverID=?";
+			String sql="select maxHeartRate,minHeartRate,currentTime from silverHeartRate where silverID=? order by currentTime desc";
 			pstmt=conn.prepareStatement(sql);
 			pstmt.setString(1,silverID);
 			
@@ -590,8 +698,9 @@ public class SilverDAO {
 			{
 				int max=rs.getInt("maxHeartRate");
 				int min=rs.getInt("minHeartRate");
-				Date currentTime=rs.getDate("currentTime");
+				String currentTime=rs.getString("currentTime");
 				list.add(new SilverHeartRateVO(max, min, currentTime));
+				
 			}
 		} 
 		catch (SQLException se) 
@@ -805,119 +914,7 @@ public class SilverDAO {
 		}
 		return emergencyRate;
 	}
-	/*	public int insert(String silverID)
-	{
-		int rowNum = 0;
-		PreparedStatement pstmt = null;
-		try{
-			String sql = "insert into ���̺�� values(?,?,?,?,?)";
-			pstmt = conn.prepareStatement(sql);
-			
-			pstmt.setString(1, silverID);
-			
-					
-			rowNum = pstmt.executeUpdate();
-		}
-		catch(SQLException se)
-		{
-			se.printStackTrace();
-		}
-		catch(Exception ex)
-		{
-			ex.printStackTrace();
-		}
-		finally
-		{
-			try
-			{
-				if(pstmt != null)
-				{
-					pstmt.close();
-				}
-			}
-			catch(SQLException se)
-			{
-				se.printStackTrace();
-			}
-		}
-		return rowNum;
-	}
-	public String select(String silverID)
-	{
-		String data=null;
-		PreparedStatement pstmt=null;
-		try 
-		{
-			String sql="select �ҷ��� �����͵� from ���̺�� where ���ǹ�";
-			pstmt=conn.prepareStatement(sql);
-			pstmt.setString(1,silverID);
-			
-			ResultSet rs=pstmt.executeQuery();
-			while(rs.next())
-			{
-				String result=rs.getString("table_row");
-			}
-		} 
-		catch (SQLException se) 
-		{
-			se.printStackTrace();
-			// TODO: handle exception
-		}
-		catch (Exception e) 
-		{
-			e.printStackTrace();
-		}
-		finally
-		{
-			try 
-			{
-				if(pstmt!=null)
-				{
-					pstmt.close();
-				}
-				
-			} 
-			catch (SQLException se) {
-				{
-					se.printStackTrace();
-				}
-			}
-		}
-		return data;
-	}*/
-	/*public int update(String silverID)
-	{
-		int rowNum = 0;
-		PreparedStatement pstmt = null;
-		
-		try{
-			String sql =  "update ���̺�� set ��ĥ���=?(��ĥ ��) where ���ǹ�";
-			pstmt = conn.prepareStatement(sql);
-			
-			pstmt.setString();
-			rowNum = pstmt.executeUpdate();
-		}catch(SQLException se){
-			se.printStackTrace();
-		}catch(Exception ex){
-			ex.printStackTrace();
-		}finally{
-			try{
-				if(pstmt != null){
-					pstmt.close();
-				}
-			}catch(SQLException se){
-				se.printStackTrace();
-			}
-		}
-		return rowNum;
-	}*/
-		
-/*	public int insertIdentifyNumber(String silverID,int identifyNumber)
-	{
-		int rowNum = 0;
-		return rowNum;
-	}
-	*/
+	
 	public String checkIdentifyNumber(int idNum)
 	{
 		
@@ -1097,11 +1094,11 @@ public class SilverDAO {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		SilverDAO dao=new SilverDAO();
-		SilverVO voTest=new SilverVO(35,60,new Date(System.currentTimeMillis()),true);
-		SilverHeartRateVO hrTest=new SilverHeartRateVO(150, 78, new Date(System.currentTimeMillis()));
+		SilverVO voTest=new SilverVO(35,60,(new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss")).format(new Date(System.currentTimeMillis())),true);
+		SilverHeartRateVO hrTest=new SilverHeartRateVO(150, 78, (new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss")).format(new Date(System.currentTimeMillis())));
 		System.out.println(dao.insertSilverData("SV005",voTest)+"\n");
 		System.out.println(dao.insertHeartRate("SV005",hrTest)+"\n");
-		System.out.println(dao.insertHeartRate("SV005",190,50,new Date(System.currentTimeMillis()))+"\n");
+		System.out.println(dao.insertHeartRate("SV005",190,50,(new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss")).format(new Date(System.currentTimeMillis())))+"\n");
 		 
 		System.out.println("test : "+dao.checkIdentifyNumber(1424));
 	}

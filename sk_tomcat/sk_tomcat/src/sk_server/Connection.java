@@ -8,6 +8,7 @@ package sk_server;
 import java.io.PrintWriter;
 import java.io.IOException;
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -47,7 +48,7 @@ public class Connection  extends HttpServlet {
 	        
 	        
 	       SilverDAO dao=new SilverDAO();
-	        SilverVO silverVO=new SilverVO(15, 111, new Date(System.currentTimeMillis()), true);
+	        SilverVO silverVO=new SilverVO(15, 111, (new SimpleDateFormat("yyyy-mm-dd-hh-mm-ss")).format(new Date(System.currentTimeMillis())), true);
 	        dao.insertSilverData("SV005", silverVO);
 	        
 	        

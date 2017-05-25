@@ -11,8 +11,8 @@ import conn.silver.vo.SilverVO;
 
 
 public class ManageData {
-   private SilverDAO sDao=SilverDAO.getInstance();
-   private KeeperDAO kDao=KeeperDAO.getInstance();
+   private SilverDAO sDao=new SilverDAO();
+   private KeeperDAO kDao=new KeeperDAO();
    private static ManageData mData=new ManageData();
    /*private ServerConnection con;*/
    
@@ -26,7 +26,7 @@ public class ManageData {
    }
    public String createSilverID(String androidID)
    {
-      String silverID="SV"+androidID;
+      String silverID="SV_"+androidID;
       
       return silverID;
    }
@@ -71,14 +71,9 @@ public class ManageData {
    public int calcMaxAverHeartRate(SilverHeartRateVO[] hrData)
    {
       int sumMax=0,cnt=hrData.length;
-      ArrayList<Integer> maxHeartRate=new ArrayList<Integer>();//최대 심박수값들을 저장한 배열 선언
       for(int i=0;i<cnt;i++)
       {
-         maxHeartRate.add(hrData[i].getMaxHeartRate()); //최대 심박수값들을 저장.
-      }
-      for(int i=0;i<cnt;i++)
-      {
-         sumMax+=maxHeartRate.get(i); //최대 심박수값 평균을 구하기 위해 총합 계산
+         sumMax+=hrData[i].getMaxHeartRate(); //최대 심박수값 평균을 구하기 위해 총합 계산
       }
       return sumMax/cnt;
    }
@@ -86,20 +81,17 @@ public class ManageData {
    public int calcMinAverHeartRate(SilverHeartRateVO[] hrData)
    {
       int sumMin=0,cnt=hrData.length;
-      ArrayList<Integer> minHeartRate=new ArrayList<Integer>();//최소 심박수값들을 저장한 배열 선언
+  
       for(int i=0;i<cnt;i++)
       {
-         minHeartRate.add(hrData[i].getMinHeartRate()); //최소 심박수값들을 저장.
+        sumMin+=hrData[i].getMinHeartRate(); //최소 심박수값들을 저장.
       }
-      for(int i=0;i<cnt;i++)
-      {
-         sumMin+=minHeartRate.get(i); //최소 심박수값 평균을 구하기 위해 총합 계산
-      }
+   
       return sumMin/cnt;
    }
-   public byte checkEmergencyLevel(SilverHeartRateVO[] hrData, SilverVO[] sData)
+   public int checkEmergencyLevel(SilverHeartRateVO[] hrData, SilverVO[] sData)
    {
-      byte status=0;
+      int status=0;
       int maxAver=this.calcMaxAverHeartRate(hrData),
          minAver=this.calcMinAverHeartRate(hrData),
          rate=0,result=0;
@@ -121,7 +113,7 @@ public class ManageData {
    }
    public byte calcEmergencyRate(SilverHeartRateVO[] hrData, SilverVO[] sData)
    {
-      byte emergencyRate=this.checkEmergencyLevel(hrData, sData);
+      int emergencyRate=this.checkEmergencyLevel(hrData, sData);
       if(emergencyRate<50)
       {
          return -1;
@@ -134,16 +126,35 @@ public class ManageData {
       }
       return -2;
    }
-   /*public int calcMaxHeartRate(SilverVO[] silverData)
+   public int calcMaxHeartRate(SilverVO[] silverData)
    {
       int max=0;
+      int temp=0;
+      for(int i=0;i<silverData.length;i++)
+      {
+    	  temp=silverData[i].getHeartRate();
+    	  if(temp>max)
+    	  {
+    		  max=temp;
+    	  }
+      }
+      
       return max;
    }
    public int calcMinHeartRate(SilverVO[] silverData)
    {
       int min=0;
+      int temp=0;
+      for(int i=0;i<silverData.length;i++)
+      {
+    	  temp=silverData[i].getHeartRate();
+    	  if(temp<min)
+    	  {
+    		  min=temp;
+    	  }
+      }
       return min;
-   }*/
+   }
 /*   public int calcAverHeartRate(SilverHeartRateVO[] hrData)
    {
       int cnt=hrData.length;
