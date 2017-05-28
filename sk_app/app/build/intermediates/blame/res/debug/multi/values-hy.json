@@ -1,6 +1,6 @@
 [
     {
-        "outputFile": "C:\\test\\sk_app\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-hy\\values-hy.xml",
+        "outputFile": "/Users/mac/Documents/SilverKeeper/sk_app/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values-hy/values-hy.xml",
         "map": [
             {
                 "to": {
@@ -11,7 +11,7 @@
                     "endOffset": 310
                 },
                 "from": {
-                    "file": "C:\\Users\\백태영\\.android\\build-cache\\572b40d5594e2268880050994bf2729b3e4cf1ea\\output\\res\\values-hy\\values.xml",
+                    "file": "/Users/mac/.android/build-cache/68fcfb4ecf633fa3c7c801ab27b245778e57a30b/output/res/values-hy/values.xml",
                     "position": {
                         "startLine": 4,
                         "startColumn": 0,

@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
+	<list key="workingset_selection_history">
+		<item value="SilverKeeper"/>
+	</list>
 	<section name="WorkbenchPreferenceDialogSettings">
 		<item value="206" key="DIALOG_X_ORIGIN"/>
 		<item value="28" key="DIALOG_Y_ORIGIN"/>
@@ -23,5 +26,7 @@
 			<item value="org.eclipse.cdt.ui.newCWizards"/>
 			<item value="org.eclipse.jdt.ui.java"/>
 		</list>
+	</section>
+	<section name="ImportExportAction">
 	</section>
 </section>
