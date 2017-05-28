@@ -14,14 +14,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.HashMap;
 import java.util.StringTokenizer;
-
-import static android.R.attr.value;
 
 public class Loading extends AppCompatActivity {
 
-    String androidID;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,7 +29,7 @@ public class Loading extends AppCompatActivity {
         Handler handler = new Handler() {
             public void handleMessage(Message msg) {
                 super.handleMessage(msg);
-                androidID=android.provider.Settings.Secure.getString(getBaseContext().getContentResolver(), Settings.Secure.ANDROID_ID);
+                String androidID=android.provider.Settings.Secure.getString(getBaseContext().getContentResolver(), Settings.Secure.ANDROID_ID);
 
                 MyFireBaseInstanceIDService createToken= new MyFireBaseInstanceIDService();
                 createToken.onTokenRefresh();
@@ -49,7 +45,7 @@ public class Loading extends AppCompatActivity {
     }
     public class AppClient extends AsyncTask<String, Void, String> {
 
-        private String url="http://222.108.243.141:8089/sk_tomcat/receiveData.do";
+        private String url="http://222.108.243.212:8089/sk_tomcat/receiveData.do";
         private String result;
         private HttpURLConnection conn;
         @Override
@@ -113,40 +109,20 @@ public class Loading extends AppCompatActivity {
                 e.printStackTrace();
 
             }
-            HashMap<String,String> results=new HashMap<String,String>();
-            StringTokenizer st=new StringTokenizer(result,"&");
-            while(st.hasMoreTokens())
-            {
-                String data = st.nextToken();
-                String temp=data;
-                StringTokenizer st2=new StringTokenizer(temp,"=");
-                while(st2.hasMoreTokens())
-                {
-                    results.put(st2.nextToken(),st2.nextToken());
-                }
-            }
+            StringTokenizer st=new StringTokenizer(result,"=");
+            String key=st.nextToken();
+            String value=st.nextToken();
             System.out.println("value:"+value);
-            Intent intent;
-            String res=results.get("result");
-            if(res.contains("new"))
-           {
-                intent=new Intent(Loading.this, ChoiceRole.class);
-               System.out.println("res:"+res+" value="+results.get("androidID"));
-               intent.putExtra("androidID",androidID);
-               startActivity(intent);
-            }
-            else if(res.contains("silver"))
+            if(value.contains("new"))
             {
-                intent=new Intent(Loading.this, ViewData.class);
-                System.out.println("res:"+res+" value="+results.get("silverID"));
-                intent.putExtra("silverID",results.get("silverID"));
-                startActivity(intent);
+                startActivity(new Intent(Loading.this, ChoiceRole.class));
             }
-            else if(res.contains("keeper")) {
-                intent=new Intent(Loading.this, ViewKdata.class);
-                System.out.println("res:"+res+" value="+results.get("keeperID"));
-                intent.putExtra("keeperID",results.get("keeperID"));
-                startActivity(intent);
+            else if(value.contains("silver"))
+            {
+                startActivity(new Intent(Loading.this, ViewData.class));
+            }
+            else if(value.contains("keeper")) {
+                startActivity(new Intent(Loading.this, ViewKdata.class));
             }
             finish();
             return result;

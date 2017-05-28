@@ -30,7 +30,6 @@
         <activity android:name=".ErrorIdentity" />
         <activity android:name=".ViewKdata" />
         <activity android:name=".RejectKeeper" />
-        <activity android:name=".SuccessVerification" />
 
         //FCM
         <service

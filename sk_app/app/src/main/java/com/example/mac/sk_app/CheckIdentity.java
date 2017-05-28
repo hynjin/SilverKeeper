@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
-//인증번호 확인을 위한 액티비티
 public class CheckIdentity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -17,5 +16,4 @@ public class CheckIdentity extends AppCompatActivity {
 
         finish();
     }
-
 }
