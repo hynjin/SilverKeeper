@@ -6,24 +6,17 @@ package com.example.mac.sk_app; /**
  *
  * Created by mac on 2017. 5. 17..
  */
+
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.media.RingtoneManager;
 import android.net.Uri;
-import android.os.PowerManager;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 
 import com.google.firebase.messaging.RemoteMessage;
-
-import java.io.BufferedInputStream;
-import java.net.URL;
-import java.net.URLConnection;
-
-import android.util.Log;
 
 public class MyFireBaseMessagingService extends com.google.firebase.messaging.FirebaseMessagingService {
     private static final String TAG = "FirebaseMsgService";
@@ -53,11 +46,21 @@ public class MyFireBaseMessagingService extends com.google.firebase.messaging.Fi
     }
     //메세지 받아서 작업 표시줄에 표시
     private void showNotification(String title, String message) {
-        Intent intent = new Intent(this, ChoiceRole.class);//MainActivity.class);
+        Intent intent = new Intent(this, Loading.class);//MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent,
                 PendingIntent.FLAG_ONE_SHOT);
 
+        //태영 추가. message 분석해서 그에 따라 작업 나누기.
+      /*  StringTokenizer st=new StringTokenizer(message,"|");
+            message = st.nextToken();
+            String role=st.nextToken();
+            String androidID=st.nextToken();*/
+
+
+
+
+        ///////
         Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.mipmap.ic_launcher)

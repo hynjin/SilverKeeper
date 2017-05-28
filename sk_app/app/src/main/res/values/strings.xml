@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">App</string>
+    <string name="title_activity_join_keeper_check">JoinKeeperCheck</string>
 </resources>

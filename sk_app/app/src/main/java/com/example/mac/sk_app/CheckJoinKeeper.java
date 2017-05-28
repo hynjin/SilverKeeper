@@ -1,53 +1,48 @@
 package com.example.mac.sk_app;
 
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.StringTokenizer;
 
-import static android.R.attr.value;
-
-public class Loading extends AppCompatActivity {
-
-    String androidID;
+public class CheckJoinKeeper extends AppCompatActivity {
+    Button yesBtn,noBtn;
+    TextView keeperName;
+    String kName, silverAndroidId, keeperAndroidId,param;
+    CheckJoinKeeperAsync cjk;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_loading);
-        LoadingActivity();
+        kName=getIntent().getStringExtra("keeperName");
+        keeperName=(TextView)findViewById(R.id.keeperName);
+        silverAndroidId=getIntent().getStringExtra("silverAndroidId");
+        keeperAndroidId=getIntent().getStringExtra("keeperAndroidId");
+        yesBtn=(Button)findViewById(R.id.yesBtn);
+        noBtn=(Button)findViewById(R.id.noBtn);
+        yesBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String param="getMethod=checkJoinKeeper&keeperAndroidID="+keeperAndroidId+"&silverAndroidId="+silverAndroidId;
+                cjk=new CheckJoinKeeperAsync();
+                cjk.execute(param);
 
-    }
-    private void LoadingActivity() {
-        Handler handler = new Handler() {
-            public void handleMessage(Message msg) {
-                super.handleMessage(msg);
-                androidID=android.provider.Settings.Secure.getString(getBaseContext().getContentResolver(), Settings.Secure.ANDROID_ID);
-
-               /* MyFireBaseInstanceIDService createToken= new MyFireBaseInstanceIDService();
-                createToken.onTokenRefresh();
-                String token=createToken.getToken();*/
-                String param = "getMethod=checkJoin&androidID="+androidID;//+"&token="+token;
-                AppClient appClient = new AppClient();
-
-                appClient.execute(param);
-                // finish();
             }
-        };
-        handler.sendEmptyMessageDelayed(0, 3000);
+        });
+        setContentView(R.layout.activity_check_join_keeper);
+
+
     }
-    public class AppClient extends AsyncTask<String, Void, String> {
+    public class CheckJoinKeeperAsync extends AsyncTask<String, Void, String> {
 
         private String url=URLData.url;//"http://222.108.243.141:8089/sk_tomcat/receiveData.do";
         private String result;
@@ -113,7 +108,7 @@ public class Loading extends AppCompatActivity {
                 e.printStackTrace();
 
             }
-            HashMap<String,String> results=new HashMap<String,String>();
+           /* HashMap<String,String> results=new HashMap<String,String>();
             StringTokenizer st=new StringTokenizer(result,"&");
             while(st.hasMoreTokens())
             {
@@ -124,31 +119,11 @@ public class Loading extends AppCompatActivity {
                 {
                     results.put(st2.nextToken(),st2.nextToken());
                 }
-            }
-            System.out.println("value:"+value);
-            Intent intent;
-            String res=results.get("result");
-            if(res.contains("new"))
-           {
-                intent=new Intent(Loading.this, ChoiceRole.class);
-               System.out.println("res:"+res+" value="+results.get("androidID"));
-               intent.putExtra("androidID",androidID);
-               startActivity(intent);
-            }
-            else if(res.contains("silver"))
-            {
-                intent=new Intent(Loading.this, ViewData.class);
-                System.out.println("res:"+res+" value="+results.get("silverID"));
-                intent.putExtra("silverID",results.get("silverID"));
-                startActivity(intent);
-            }
-            else if(res.contains("keeper")) {
-                intent=new Intent(Loading.this, ViewKdata.class);
-                System.out.println("res:"+res+" value="+results.get("keeperID"));
-                intent.putExtra("keeperID",results.get("keeperID"));
-                startActivity(intent);
-            }
-            finish();
+            }*/
+
+
+
+
             return result;
 
         }
@@ -160,17 +135,6 @@ public class Loading extends AppCompatActivity {
             System.out.println("Result!:"+res);
 
 
-           /* Enumeration<String> parameterNames = request.getParameterNames();
-            while (parameterNames.hasMoreElements())
-            {
-                String name = (String) parameterNames.nextElement();
-                if(name.equals("getMethod"))
-                    type = request.getParameter(name);
-                else
-                    dataMap.put(name, request.getParameter(name));
-                System.out.println(name + "=" + request.getParameter(name));
-            }
-            return dataMap;*/
             conn.disconnect();
 
 

@@ -16,12 +16,12 @@
         android:text="라즈베리파이의 MAC주소" />
 
     <EditText
-        android:id="@+id/editText4"
+        android:id="@+id/raspMAC"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:ems="20"
-        android:layout_marginTop="30dp"
         android:layout_gravity="center_horizontal"
+        android:layout_marginTop="30dp"
+        android:ems="20"
         android:hint="문자만 입력하시오" />
 
     <Button
@@ -43,17 +43,6 @@
         android:layout_marginTop="20dp"
         android:onClick="cancel"
         android:text="취소"
-        android:textColor="#000000"
-        android:textSize="20dp" />
-
-    <Button
-        android:id="@+id/viewdata"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="30dp"
-        android:onClick="viewdata"
-        android:text="정보보기"
         android:textColor="#000000"
         android:textSize="20dp" />
 

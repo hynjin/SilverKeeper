@@ -9,6 +9,7 @@ import android.view.View;
  * Created by 차민광01027370165 on 2017-05-11.
  */
 
+//실버가 키퍼의 연결을 거부했음을 알리는 액티비티
 public class RejectKeeper extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

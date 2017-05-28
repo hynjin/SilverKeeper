@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF">
+    android:background="#FFFFFF"
+    android:baselineAligned="false">
     <!--데이터 보기(실버 화면)-->
+
     <Button
         android:id="@+id/ok"
         android:layout_width="wrap_content"
@@ -13,6 +16,12 @@
         android:textColor="#000000"
         android:onClick="ok"
         android:text="인증번호 확인" />
+
+    <ImageView
+        android:id="@+id/statusImage"
+        android:layout_width="match_parent"
+        android:layout_height="68dp"
+        app:srcCompat="@drawable/gray" />
 
     <TextView
         android:id="@+id/heart"
@@ -25,7 +34,7 @@
         android:text="현재 심박수" />
 
     <TextView
-        android:id="@+id/heartRate"
+        android:id="@+id/heartRate2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
@@ -45,7 +54,7 @@
         android:text="오늘하루 걸음수" />
 
     <TextView
-        android:id="@+id/walkCount"
+        android:id="@+id/walkCount2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
@@ -55,8 +64,20 @@
         android:text="10000" />
 
     <Button
-        android:id="@+id/test"
-        android:layout_width="match_parent"
+        android:id="@+id/cancel"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="test" />
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20dp"
+        android:onClick="cancel"
+        android:text="역할재선택"
+        android:textColor="#000000"
+        android:textSize="20dp" />
+
+    <TextView
+        android:id="@+id/testIdNum"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView" />
+
 </LinearLayout>

@@ -10,9 +10,9 @@
         android:id="@+id/imageView"
         android:layout_width="216dp"
         android:layout_height="223dp"
-        app:srcCompat="@drawable/silver"
+        android:layout_gravity="center_horizontal"
         android:layout_marginTop="50dp"
-        android:layout_gravity="center_horizontal"/>
+        app:srcCompat="@drawable/silver" />
 
     <TextView
         android:id="@+id/textView"
