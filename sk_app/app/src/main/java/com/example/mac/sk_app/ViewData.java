@@ -1,5 +1,26 @@
 package com.example.mac.sk_app;
 
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothGattCharacteristic;
+import android.bluetooth.BluetoothManager;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.ServiceConnection;
+import android.os.Handler;
+import android.os.IBinder;
+import android.widget.ToggleButton;
+
+import com.jellygom.miband_sdk.MiBandIO.Listener.HeartrateListener;
+import com.jellygom.miband_sdk.MiBandIO.Listener.NotifyListener;
+import com.jellygom.miband_sdk.MiBandIO.Listener.RealtimeStepListener;
+import com.jellygom.miband_sdk.MiBandIO.Listener.BatteryListener;
+import com.jellygom.miband_sdk.MiBandIO.MibandCallback;
+import com.jellygom.miband_sdk.MiBandIO.Model.UserInfo;
+import com.jellygom.miband_sdk.Miband;
+
+
+
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -25,6 +46,7 @@ import java.text.SimpleDateFormat;
 
 //보호자가 생체정보를 보는 화면
 public class ViewData extends AppCompatActivity {
+
     TextView heartText,walkText,walkCount,heartRate,testIdNum;
     ImageView statusView;
     String silverID;
@@ -37,8 +59,171 @@ public class ViewData extends AppCompatActivity {
     Random rand=new Random();
     int wCount,hRate,conM;
     boolean connMiBand;
+
+    private static final String TAG = ViewData.class.getSimpleName();
+    private Miband miband;
+    private BluetoothAdapter mBluetoothAdapter;
+
+
+    //private String url=URLData.url;//"http://222.108.243.141:8089/sk_tomcat/receiveData.do";
+    //private String result;
+    //private HttpURLConnection conn;
+
+    /*private RealtimeStepListener realtimeStepListener = new RealtimeStepListener() {
+        @Override
+        public void onNotify(final int steps) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    step.setText(steps + " steps");
+                    text.append(steps + " steps\n");
+                }
+            });
+        }
+    };*/
+
+    private HeartrateListener heartrateNotifyListener = new HeartrateListener() {
+        @Override
+        public void onNotify(final int heartRate) {
+            hRate = heartRate;
+            param2="getMethod=receiveSilverData&silverID="+silverID;
+            param2+="&heartRate="+hRate+"&walkCount="+wCount+"&currentTime="+(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS")).format(new Date(System.currentTimeMillis()))+"&connMiBand="+connMiBand;
+            ssd=new SendSilverData();
+            ssd.execute(param2);
+            /*runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if(heartRate >=0)
+                        heartText.setText(heartRate + " bpm");
+                    //text.append(heartRate + " bpm\n");
+                }
+            });*/
+        }
+    };
+
+    /*private BatteryListener batteryListener = new BatteryListener() {
+        @Override
+        public void onNotify(final int level) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    battery.setText(level + " %");
+                    text.append(level + " %\n");
+                }
+            });
+        }
+    };*/
+
+    private final MibandCallback mibandCallback = new MibandCallback() {
+        @Override
+        public void onSuccess(Object data, int status) {
+            switch (status) {
+                case MibandCallback.STATUS_SEARCH_DEVICE:
+                    Log.e(TAG, "성공: STATUS_SEARCH_DEVICE");
+                    miband.connect((BluetoothDevice) data, this);
+                    break;
+                case MibandCallback.STATUS_CONNECT:
+                    Log.e(TAG, "성공: STATUS_CONNECT");
+                    //miband.setHeartRateScanListener(heartrateNotifyListener);
+                    miband.getUserInfo(this);
+                    break;
+                case MibandCallback.STATUS_SEND_ALERT:
+                    Log.e(TAG, "성공: STATUS_SEND_ALERT");
+                    break;
+                case MibandCallback.STATUS_GET_USERINFO:
+                    Log.e(TAG, "성공: STATUS_GET_USERINFO"+((BluetoothGattCharacteristic) data).getValue());
+                    UserInfo userInfo = new UserInfo().fromByteData(((BluetoothGattCharacteristic) data).getValue());
+                    miband.setUserInfo(userInfo, this);
+                    break;
+                case MibandCallback.STATUS_SET_USERINFO:
+                    Log.e(TAG, "성공: STATUS_SET_USERINFO");
+                    miband.setHeartRateScanListener(heartrateNotifyListener);
+                    break;
+                case MibandCallback.STATUS_START_HEARTRATE_SCAN:
+                    Log.e(TAG, "성공: STATUS_START_HEARTRATE_SCAN");
+                    Log.v("zz",data.toString());
+                    //heartrateNotifyListener.onNotify((int)data);
+                    break;
+                //case MibandCallback.STATUS_GET_BATTERY:
+                //    Log.e(TAG, "성공: STATUS_GET_BATTERY");
+                //    final int level = (int) data;
+                //    runOnUiThread(new Runnable() {
+                //        @Override
+                //        public void run() {
+                //            battery.setText(level+ " % battery");
+                //            text.append(level + " % battery\n");
+                //        }
+                //    });
+                //    break;
+                //case MibandCallback.STATUS_GET_ACTIVITY_DATA:
+                //    Log.e(TAG, "성공: STATUS_GET_ACTIVITY_DATA");
+                //    final int steps = (int) data;
+                //    runOnUiThread(new Runnable() {
+                //        @Override
+                //        public void run() {
+                //            step.setText(steps+ " steps");
+                //            text.append(steps+ " steps\n");
+                //        }
+                //    });
+                //    break;
+            }
+        }
+
+        @Override
+        public void onFail(int errorCode, String msg, int status) {
+            switch (status) {
+                case MibandCallback.STATUS_SEARCH_DEVICE:
+                    Log.e(TAG, "실패: STATUS_SEARCH_DEVICE");
+                    break;
+                case MibandCallback.STATUS_CONNECT:
+                    Log.e(TAG, "실패: STATUS_CONNECT");
+                    break;
+                case MibandCallback.STATUS_SEND_ALERT:
+                    Log.e(TAG, "실패: STATUS_SEND_ALERT");
+                    break;
+                case MibandCallback.STATUS_GET_USERINFO:
+                    Log.e(TAG, "실패: STATUS_GET_USERINFO");
+                    break;
+                case MibandCallback.STATUS_SET_USERINFO:
+                    Log.e(TAG, "실패: STATUS_SET_USERINFO");
+                    break;
+                case MibandCallback.STATUS_START_HEARTRATE_SCAN:
+                    Log.e(TAG, "실패: STATUS_START_HEARTRATE_SCAN");
+                    break;
+                //case MibandCallback.STATUS_GET_BATTERY:
+                //    Log.e(TAG, "실패: STATUS_GET_BATTERY");
+                //    break;
+                //case MibandCallback.STATUS_GET_ACTIVITY_DATA:
+                //    Log.e(TAG, "실패: STATUS_GET_ACTIVITY_DATA");
+                //    break;
+            }
+        }
+    };
+
+
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+        miband = new Miband(getApplicationContext());
+
+        mBluetoothAdapter = ((BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE)).getAdapter();
+
+        //miband = new Miband(getApplicationContext());
+
+        miband.searchDevice(mBluetoothAdapter, this.mibandCallback);
+
+        miband.setDisconnectedListener(new NotifyListener() {
+            @Override
+            public void onNotify(byte[] data) {
+                miband.searchDevice(mBluetoothAdapter, mibandCallback);
+            }
+        });
+
+
+
+
         setContentView(R.layout.view_data);
         Intent intent=getIntent();
         silverID=intent.getStringExtra("silverID");
@@ -46,22 +231,26 @@ public class ViewData extends AppCompatActivity {
         System.out.println("SILVERID:"+silverID);
         param1="getMethod=sendSilverData&silverID="+silverID;
         rs=new RequestSilver();
-        param2="getMethod=receiveSilverData&silverID="+silverID;
-        hRate=rand.nextInt(101)+50;
-        wCount=rand.nextInt(201);
-        conM=rand.nextInt(2);
-        if(conM==1)
-        {
-            connMiBand=true;
-        }
-        else connMiBand=false;
-        param2+="&heartRate="+hRate+"&walkCount="+wCount+"&currentTime="+(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS")).format(new Date(System.currentTimeMillis()))+"&connMiBand="+connMiBand;
+        //param2="getMethod=receiveSilverData&silverID="+silverID;
+        //hRate=rand.nextInt(101)+50;
+        //wCount=rand.nextInt(201);
+        //conM=rand.nextInt(2);
+        //if(conM==1)
+        //{
+        //    connMiBand=true;
+        //}
+        //else connMiBand=false;
+
+        //param2+="&heartRate="+hRate+"&walkCount="+wCount+"&currentTime="+(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS")).format(new Date(System.currentTimeMillis()))+"&connMiBand="+connMiBand;
         rs.execute(param1);
-        ssd=new SendSilverData();
-        ssd.execute(param2);
+        //ssd=new SendSilverData();
+        //ssd.execute(param2);
         param3="getMethod=checkEmergency&silverID="+silverID;
         rss=new RequestSilverStatus();
-       rss.execute(param3);
+        rss.execute(param3);
+
+        miband.startHeartRateScan(1, mibandCallback,heartrateNotifyListener);
+        miband.setHeartRateScanListener(heartrateNotifyListener);
     }
     public void ok(View view) {
         Intent intent = new Intent(this, CheckIdentity.class);
@@ -79,19 +268,20 @@ public class ViewData extends AppCompatActivity {
         finish();
     }
     public class RequestSilver extends AsyncTask<String, Void, String> {
-
-        private String url=URLData.url;
-        //"http://222.108.243.141:8089/sk_tomcat/receiveData.do";
-        private String result;
+        private String url=URLData.url;;//"http://222.108.243.141:8089/sk_tomcat/receiveData.do";
+        //private String result;
         private HttpURLConnection conn;
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-           /* try{
+            try{
+                URL obj = new URL(url);
+                conn = (HttpURLConnection) obj.openConnection();
                 Thread.sleep(1000);
             }
             catch(Exception e)
-            {}*/
+            {}
 
 
         /* "http://silverkeeper.iptime.org/sk_server/receiveSilverData";*/
@@ -100,53 +290,7 @@ public class ViewData extends AppCompatActivity {
 
         @Override
         public String doInBackground(String... params) {
-            try {
-                URL obj = new URL(url);
-                conn = (HttpURLConnection) obj.openConnection();
-
-                /*conn.setReadTimeout(10000);*/
-            /*conn.setConnectTimeout(15000);*/
-                conn.setRequestMethod("POST");
-                conn.setDoInput(true);
-                conn.setDoOutput(true);
-                conn.setUseCaches(false);
-                conn.setDefaultUseCaches(false);
-                conn.setRequestProperty("Content-Type","application/x-www-form-urlencoded;charset=utf-8");
-
-
-                OutputStream out = conn.getOutputStream();
-                String test ="";
-                for(int i=0;i<params.length;i++)
-                    test = test + params[i];
-                Log.v("///",test);
-                /*System.out.println()*/
-                out.write(test.getBytes());
-                out.flush();
-                out.close();
-                conn.connect();
-
-                InputStream in = conn.getInputStream();
-
-                ByteArrayOutputStream bout = new ByteArrayOutputStream();
-
-                byte[] buf = new byte[1024 * 8];
-                int length = 0;
-                while ((length = in.read(buf)) != -1) {
-                    bout.write(buf, 0, length);
-                }
-
-                System.out.println(new String(bout.toByteArray(), "UTF-8"));
-                Log.w("server",new String(bout.toByteArray(), "UTF-8"));
-
-                result=new String(bout.toByteArray(), "UTF-8");
-                System.out.println("asyncTask result:"+result+"\n");
-                Log.v("asyncTaskResult",result);
-
-            } catch (Exception e) {
-                e.printStackTrace();
-
-            }
-            return result;
+            return BackgroundDoing(conn,params);
         }
         @Override
         protected void onPostExecute(String res)
@@ -195,19 +339,20 @@ public class ViewData extends AppCompatActivity {
        }
    }
     public class RequestSilverStatus extends AsyncTask<String, Void, String> {
-
         private String url=URLData.url;;//"http://222.108.243.141:8089/sk_tomcat/receiveData.do";
-        private String result;
+        //private String result;
         private HttpURLConnection conn;
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-
-          /*  try{
+            try{
+                URL obj = new URL(url);
+                conn = (HttpURLConnection) obj.openConnection();
                 Thread.sleep(1000);
             }
             catch(Exception e)
-            {}*/
+            {}
 
 
         /* "http://silverkeeper.iptime.org/sk_server/receiveSilverData";*/
@@ -216,55 +361,7 @@ public class ViewData extends AppCompatActivity {
 
         @Override
         public String doInBackground(String... params) {
-
-            try {
-                URL obj = new URL(url);
-                conn = (HttpURLConnection) obj.openConnection();
-
-                /*conn.setReadTimeout(10000);*/
-            /*conn.setConnectTimeout(15000);*/
-                conn.setRequestMethod("POST");
-                conn.setDoInput(true);
-                conn.setDoOutput(true);
-                conn.setUseCaches(false);
-                conn.setDefaultUseCaches(false);
-                conn.setRequestProperty("Content-Type","application/x-www-form-urlencoded;charset=utf-8");
-
-
-                OutputStream out = conn.getOutputStream();
-                String test ="";
-                for(int i=0;i<params.length;i++)
-                    test = test + params[i];
-                Log.v("///",test);
-                /*System.out.println()*/
-                out.write(test.getBytes());
-                out.flush();
-                out.close();
-                conn.connect();
-
-                InputStream in = conn.getInputStream();
-
-                ByteArrayOutputStream bout = new ByteArrayOutputStream();
-
-                byte[] buf = new byte[1024 * 8];
-                int length = 0;
-                while ((length = in.read(buf)) != -1) {
-                    bout.write(buf, 0, length);
-                }
-
-                System.out.println(new String(bout.toByteArray(), "UTF-8"));
-                Log.w("server",new String(bout.toByteArray(), "UTF-8"));
-
-                result=new String(bout.toByteArray(), "UTF-8");
-                System.out.println("asyncTask result:"+result+"\n");
-                Log.v("asyncTaskResult",result);
-
-            } catch (Exception e) {
-                e.printStackTrace();
-
-            }
-
-            return result;
+            return BackgroundDoing(conn,params);
         }
         @Override
         protected void onPostExecute(String res)
@@ -293,18 +390,20 @@ public class ViewData extends AppCompatActivity {
         }
     }
     public class SendSilverData extends AsyncTask<String, Void, String> {
-
-        private String url=URLData.url;//"http://222.108.243.141:8089/sk_tomcat/receiveData.do";
-        private String result;
+        private String url=URLData.url;;//"http://222.108.243.141:8089/sk_tomcat/receiveData.do";
+        //private String result;
         private HttpURLConnection conn;
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            /*try{
-                Thread.sleep(1000);
+            try{
+                URL obj = new URL(url);
+                conn = (HttpURLConnection) obj.openConnection();
+                //Thread.sleep(1000);
             }
             catch(Exception e)
-            {}*/
+            {}
 
 
         /* "http://silverkeeper.iptime.org/sk_server/receiveSilverData";*/
@@ -313,54 +412,7 @@ public class ViewData extends AppCompatActivity {
 
         @Override
         public String doInBackground(String... params) {
-            try {
-                URL obj = new URL(url);
-                conn = (HttpURLConnection) obj.openConnection();
-
-                /*conn.setReadTimeout(10000);*/
-            /*conn.setConnectTimeout(15000);*/
-                conn.setRequestMethod("POST");
-                conn.setDoInput(true);
-                conn.setDoOutput(true);
-                conn.setUseCaches(false);
-                conn.setDefaultUseCaches(false);
-                conn.setRequestProperty("Content-Type","application/x-www-form-urlencoded;charset=utf-8");
-
-
-                OutputStream out = conn.getOutputStream();
-                String test ="";
-                for(int i=0;i<params.length;i++)
-                    test = test + params[i];
-                Log.v("///",test);
-                /*System.out.println()*/
-                out.write(test.getBytes());
-                out.flush();
-                out.close();
-                conn.connect();
-
-                InputStream in = conn.getInputStream();
-
-                ByteArrayOutputStream bout = new ByteArrayOutputStream();
-
-                byte[] buf = new byte[1024 * 8];
-                int length = 0;
-                while ((length = in.read(buf)) != -1) {
-                    bout.write(buf, 0, length);
-                }
-
-                System.out.println(new String(bout.toByteArray(), "UTF-8"));
-                Log.w("server",new String(bout.toByteArray(), "UTF-8"));
-
-                result=new String(bout.toByteArray(), "UTF-8");
-                System.out.println("asyncTask result:"+result+"\n");
-                Log.v("asyncTaskResult",result);
-
-            } catch (Exception e) {
-                e.printStackTrace();
-
-            }
-
-            return result;
+            return BackgroundDoing(conn,params);
         }
         @Override
         protected void onPostExecute(String res)
@@ -368,20 +420,76 @@ public class ViewData extends AppCompatActivity {
             super.onPostExecute(res);
             System.out.println("Result!:"+res);
 
-            param2="getMethod=receiveSilverData&silverID="+silverID;
-            hRate=rand.nextInt(101)+50;
+            //hRate=rand.nextInt(101)+50;
+
+            miband.startHeartRateScan(1, mibandCallback,heartrateNotifyListener);
+            miband.setHeartRateScanListener(heartrateNotifyListener);
             wCount=rand.nextInt(201);
-            conM=rand.nextInt(2);
+            conM=1;//rand.nextInt(2);
+
             if(conM==1)
             {
                 connMiBand=true;
             }
             else connMiBand=false;
-            param2+="&heartRate="+hRate+"&walkCount="+wCount+"&currentTime="+(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS")).format(new Date(System.currentTimeMillis()))+"&connMiBand="+connMiBand;
-            ssd=new SendSilverData();
-            ssd.execute(param2);
+            //param2="getMethod=receiveSilverData&silverID="+silverID;
+            //param2+="&heartRate="+hRate+"&walkCount="+wCount+"&currentTime="+(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS")).format(new Date(System.currentTimeMillis()))+"&connMiBand="+connMiBand;
+            //ssd=new SendSilverData();
+            //ssd.execute(param2);
             conn.disconnect();
         }
+    }
+
+    public String BackgroundDoing(HttpURLConnection conn,String... params){
+        String result = new String();
+        try {
+            //URL obj = new URL(url);
+            //conn = (HttpURLConnection) obj.openConnection();
+
+                /*conn.setReadTimeout(10000);*/
+            /*conn.setConnectTimeout(15000);*/
+            conn.setRequestMethod("POST");
+            conn.setDoInput(true);
+            conn.setDoOutput(true);
+            conn.setUseCaches(false);
+            conn.setDefaultUseCaches(false);
+            conn.setRequestProperty("Content-Type","application/x-www-form-urlencoded;charset=utf-8");
+
+
+            OutputStream out = conn.getOutputStream();
+            String test ="";
+            for(int i=0;i<params.length;i++)
+                test = test + params[i];
+            Log.v("///",test);
+                /*System.out.println()*/
+            out.write(test.getBytes());
+            out.flush();
+            out.close();
+            conn.connect();
+
+            InputStream in = conn.getInputStream();
+
+            ByteArrayOutputStream bout = new ByteArrayOutputStream();
+
+            byte[] buf = new byte[1024 * 8];
+            int length = 0;
+            while ((length = in.read(buf)) != -1) {
+                bout.write(buf, 0, length);
+            }
+
+            System.out.println(new String(bout.toByteArray(), "UTF-8"));
+            Log.w("server",new String(bout.toByteArray(), "UTF-8"));
+
+            result=new String(bout.toByteArray(), "UTF-8");
+            System.out.println("asyncTask result:"+result+"\n");
+            Log.v("asyncTaskResult",result);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+
+        }
+
+        return result;
     }
 
 }

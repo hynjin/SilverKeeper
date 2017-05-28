@@ -3209,7 +3209,7 @@ containing a value of this type.
         public static final int noBtn=0x7f0d007f;
         public static final int none=0x7f0d0017;
         public static final int normal=0x7f0d0019;
-        public static final int notification_background=0x7f0d00b0;
+        public static final int notification_background=0x7f0d00af;
         public static final int notification_main_column=0x7f0d00aa;
         public static final int notification_main_column_container=0x7f0d00a9;
         public static final int ok=0x7f0d007b;
@@ -3224,7 +3224,7 @@ containing a value of this type.
         public static final int radio=0x7f0d0064;
         public static final int raspMAC=0x7f0d00a0;
         public static final int right=0x7f0d0035;
-        public static final int right_icon=0x7f0d00af;
+        public static final int right_icon=0x7f0d00b0;
         public static final int right_side=0x7f0d00ab;
         public static final int role=0x7f0d008c;
         public static final int screen=0x7f0d0028;
