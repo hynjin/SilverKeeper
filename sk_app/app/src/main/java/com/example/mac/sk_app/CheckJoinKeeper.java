@@ -1,7 +1,11 @@
 package com.example.mac.sk_app;
 
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -13,32 +17,41 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.StringTokenizer;
 
 public class CheckJoinKeeper extends AppCompatActivity {
     Button yesBtn,noBtn;
     TextView keeperName;
-    String kName, silverAndroidId, keeperAndroidId,param;
+    String kName, silverID, keeperAndroidId,param,token;
     CheckJoinKeeperAsync cjk;
+    Context context;
+    Intent intent;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_check_join_keeper);
+        context=this;
         kName=getIntent().getStringExtra("keeperName");
         keeperName=(TextView)findViewById(R.id.keeperName);
-        silverAndroidId=getIntent().getStringExtra("silverAndroidId");
-        keeperAndroidId=getIntent().getStringExtra("keeperAndroidId");
+        silverID=getIntent().getStringExtra("silverID");
+        keeperAndroidId=getIntent().getStringExtra("KeeperAndroidId");
         yesBtn=(Button)findViewById(R.id.yesBtn);
         noBtn=(Button)findViewById(R.id.noBtn);
+        keeperName.setText(kName);
+
         yesBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String param="getMethod=checkJoinKeeper&keeperAndroidID="+keeperAndroidId+"&silverAndroidId="+silverAndroidId;
+
+                param="getMethod=checkJoinKeeper&KeeperAndroidID="+keeperAndroidId+"&silverID="+silverID;
                 cjk=new CheckJoinKeeperAsync();
                 cjk.execute(param);
 
             }
         });
-        setContentView(R.layout.activity_check_join_keeper);
+
 
 
     }
@@ -133,7 +146,40 @@ public class CheckJoinKeeper extends AppCompatActivity {
         {
             super.onPostExecute(res);
             System.out.println("Result!:"+res);
+            HashMap<String,String> map=new HashMap<String,String>();
+            StringTokenizer st=new StringTokenizer(res,"&");
+            while(st.hasMoreTokens())
+            {
+                String data = st.nextToken();
+                String temp=data;
+                StringTokenizer st2=new StringTokenizer(temp,"=");
+                while(st2.hasMoreTokens())
+                {
+                    String key=st2.nextToken();
+                    String value=st2.nextToken();
+                    System.out.println("key:"+key);
+                    System.out.println("value:"+value);
+                    map.put(key,value);
+                }
+            }
+             if(map.get("result").contains("success"))
+            {
+                AlertDialog.Builder builder2 = new AlertDialog.Builder(context);
+                builder2.setMessage("키퍼의 등록이 완료되었습니다: " + map.get("keeperID"));
+                builder2.setTitle("등록 완료");
+                builder2.setNeutralButton("확인", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                intent = new Intent(context, ViewData.class);
+                                intent.putExtra("silverID", silverID);
+                                startActivity(intent);
+                                finish();
 
+                            }
+                        }
+                );
+                builder2.create().show();
+            }
 
             conn.disconnect();
 

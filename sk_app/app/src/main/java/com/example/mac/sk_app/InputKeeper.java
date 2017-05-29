@@ -13,6 +13,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.StringTokenizer;
 
 import static com.example.mac.sk_app.R.id.identifyNumber;
 import static com.example.mac.sk_app.R.id.keeperName;
@@ -20,10 +21,9 @@ import static com.example.mac.sk_app.R.id.keeperName;
 //인증번호와 키퍼의 이름을 입력하는 액티비티
 public class InputKeeper extends AppCompatActivity {
     EditText idNumView,kNameView;
-    String initIdentifyNumber="1234";         //초기화된 인증번호
-    String initKeeperName="Jackson";         //초기화된 보호대상자의 이름
-    String inputNumber,inputName,param1,param2,androidID,token;
+    String inputNumber,inputName,param1,param2,androidID,token,keeperID;
     JoinKeeper joinKeeper;
+    CheckCreateID ccid;
     MyFireBaseInstanceIDService createToken;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,23 +40,13 @@ public class InputKeeper extends AppCompatActivity {
         inputName=kNameView.getText().toString();
         System.out.println("inputNumber:"+inputNumber);
         System.out.println("inputName:"+inputName);
-        param1="getMethod=joinKeeper&=androidID="+androidID+"&inputNumber="+inputNumber+"&inputName="+inputName;
+        MyFireBaseInstanceIDService createToken= new MyFireBaseInstanceIDService();
+        createToken.onTokenRefresh();
+        token=createToken.getToken();
+        param1="getMethod=joinKeeper&androidID="+androidID+"&inputNumber="+inputNumber+"&inputName="+inputName;
+        param2="getMethod=checkCreateKeeperID&androidID="+androidID+"&token="+token;
         joinKeeper=new JoinKeeper();
         joinKeeper.execute(param1);
-        /*if(!sidentifyNumber.equals(initIdentifyNumber)) {               //인증번호를 잘못 입력했을 때 인증번호 오류를 알리는 액티비티로 이동
-            Intent intent = new Intent(this, ErrorIdentity.class);
-            startActivity(intent);
-            finish();
-        } else if(!skeeperName.equals(initKeeperName)) {                //키퍼이름을 잘못 입력했을 때 보호자가 연결을 거부했다고 알리는 액티비티로 이동
-            Intent intent = new Intent(this, RejectKeeper.class);
-            startActivity(intent);
-            finish();
-        } else {
-            Intent intent = new Intent(this, SuccessVerification.class);
-            startActivity(intent);
-            finish();
-
-        }*/
 
     }
     public void cancel(View view) {
@@ -131,29 +121,13 @@ public class InputKeeper extends AppCompatActivity {
         protected void onPostExecute(String res)
         {
             super.onPostExecute(res);
-            System.out.println("Result onPostExecute:"+res);
-            /*results=new HashMap<String,String>();
-            StringTokenizer st=new StringTokenizer(res,"&");
-            while(st.hasMoreTokens())
-            {
-                String data = st.nextToken();
-                String temp=data;
-                StringTokenizer st2=new StringTokenizer(temp,"=");
-                while(st2.hasMoreTokens())
-                {
-                    String key=st2.nextToken();
-                    String value=st2.nextToken();
-                    System.out.println("key:"+key);
-                    System.out.println("value:"+value);
-                    results.put(key,value);
-                }
-            }*/
-            System.out.println("Result!:"+res);
 
-            conn.disconnect();
+            ccid=new CheckCreateID();
+            ccid.execute(param2);
+
         }
     }
-    public class sendToken extends AsyncTask<String, Void, String> {
+    public class CheckCreateID extends AsyncTask<String, Void, String> {
 
         private String url=URLData.url;
         private String result;
@@ -220,23 +194,25 @@ public class InputKeeper extends AppCompatActivity {
         {
             super.onPostExecute(res);
             System.out.println("Result onPostExecute:"+res);
-            /*results=new HashMap<String,String>();
-            StringTokenizer st=new StringTokenizer(res,"&");
-            while(st.hasMoreTokens())
-            {
-                String data = st.nextToken();
-                String temp=data;
-                StringTokenizer st2=new StringTokenizer(temp,"=");
-                while(st2.hasMoreTokens())
+            StringTokenizer st=new StringTokenizer(res,"=");
+
+                String key = st.nextToken();
+                String result=st.nextToken();
+
+                System.out.println("Result!:"+res);
+                if(result.contains("created"))
                 {
-                    String key=st2.nextToken();
-                    String value=st2.nextToken();
-                    System.out.println("key:"+key);
-                    System.out.println("value:"+value);
-                    results.put(key,value);
+                    keeperID="KP_"+androidID;
+                   Intent intent=new Intent(InputKeeper.this,ViewKdata.class);
+                    intent.putExtra("keeperID",keeperID);
+                    startActivity(intent);
+                    finish();
                 }
-            }*/
-            System.out.println("Result!:"+res);
+                else
+                {
+                    ccid=new CheckCreateID();
+                    ccid.execute(param2);
+                }
 
             conn.disconnect();
         }

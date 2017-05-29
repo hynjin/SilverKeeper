@@ -26,8 +26,22 @@ public class Loading extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loading);
-        LoadingActivity();
-
+        if(getIntent().getStringExtra("KeeperAndroidId")!=null)
+        {
+            System.out.println("Loading:SilverID:"+getIntent().getStringExtra("silverID"));
+            System.out.println("Loading:KeeperAndroidId:"+getIntent().getStringExtra("KeeperAndroidId"));
+            System.out.println("Loading:keeperName:"+getIntent().getStringExtra("keeperName"));
+            Intent intent=new Intent(this,CheckJoinKeeper.class);
+            intent.putExtra("silverID",getIntent().getStringExtra("silverID"));
+            intent.putExtra("KeeperAndroidId",getIntent().getStringExtra("KeeperAndroidId"));
+            intent.putExtra("keeperName",getIntent().getStringExtra("keeperName"));
+            startActivity(intent);
+            finish();
+            return;
+        }
+        else
+            LoadingActivity();
+            return;
     }
     private void LoadingActivity() {
         Handler handler = new Handler() {
@@ -122,7 +136,9 @@ public class Loading extends AppCompatActivity {
                 StringTokenizer st2=new StringTokenizer(temp,"=");
                 while(st2.hasMoreTokens())
                 {
-                    results.put(st2.nextToken(),st2.nextToken());
+                    String value=st2.nextToken();
+                    String result=st2.nextToken();
+                    results.put(value,result);
                 }
             }
             System.out.println("value:"+value);

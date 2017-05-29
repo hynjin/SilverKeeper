@@ -4,23 +4,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothManager;
-import android.content.ComponentName;
 import android.content.Context;
-import android.content.ServiceConnection;
-import android.os.Handler;
-import android.os.IBinder;
-import android.widget.ToggleButton;
-
-import com.jellygom.miband_sdk.MiBandIO.Listener.HeartrateListener;
-import com.jellygom.miband_sdk.MiBandIO.Listener.NotifyListener;
-import com.jellygom.miband_sdk.MiBandIO.Listener.RealtimeStepListener;
-import com.jellygom.miband_sdk.MiBandIO.Listener.BatteryListener;
-import com.jellygom.miband_sdk.MiBandIO.MibandCallback;
-import com.jellygom.miband_sdk.MiBandIO.Model.UserInfo;
-import com.jellygom.miband_sdk.Miband;
-
-
-
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -30,16 +14,22 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.jellygom.miband_sdk.MiBandIO.Listener.HeartrateListener;
+import com.jellygom.miband_sdk.MiBandIO.Listener.NotifyListener;
+import com.jellygom.miband_sdk.MiBandIO.MibandCallback;
+import com.jellygom.miband_sdk.MiBandIO.Model.UserInfo;
+import com.jellygom.miband_sdk.Miband;
+
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Random;
 import java.util.StringTokenizer;
-import java.sql.Date;
-import java.text.SimpleDateFormat;
 /**
  * Created by 차민광01027370165 on 2017-05-11.
  */
@@ -88,6 +78,7 @@ public class ViewData extends AppCompatActivity {
             hRate = heartRate;
             param2="getMethod=receiveSilverData&silverID="+silverID;
             param2+="&heartRate="+hRate+"&walkCount="+wCount+"&currentTime="+(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS")).format(new Date(System.currentTimeMillis()))+"&connMiBand="+connMiBand;
+            System.out.println("param2:"+param2);
             ssd=new SendSilverData();
             ssd.execute(param2);
             /*runOnUiThread(new Runnable() {
