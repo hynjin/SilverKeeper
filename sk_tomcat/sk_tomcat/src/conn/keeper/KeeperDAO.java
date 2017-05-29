@@ -301,7 +301,7 @@ public class KeeperDAO implements Serializable{
 				{
 					break;
 				}
-				keeperID="";
+				keeperID="noData";
 			}
 		} 
 		catch (SQLException se) 
@@ -331,6 +331,46 @@ public class KeeperDAO implements Serializable{
 		}
 		return keeperID;
 	}
+	
+	public int insertKeeperToken(String keeperID,String token)
+	{
+		
+			int rowNum = 0;
+			PreparedStatement pstmt = null;
+			try{
+				String sql = "insert into keeperData values(?,?)";
+				pstmt = conn.prepareStatement(sql);
+				
+				pstmt.setString(1, keeperID);
+				pstmt.setString(2, token);
+				rowNum = pstmt.executeUpdate();
+			}
+			catch(SQLException se)
+			{
+				se.printStackTrace();
+			}
+			catch(Exception ex)
+			{
+				ex.printStackTrace();
+			}
+			finally
+			{
+				try
+				{
+					if(pstmt != null)
+					{
+						pstmt.close();
+					}
+				}
+				catch(SQLException se)
+				{
+					se.printStackTrace();
+				}
+			}
+			return rowNum;
+		}
+	
+	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		KeeperDAO daotest= new KeeperDAO();

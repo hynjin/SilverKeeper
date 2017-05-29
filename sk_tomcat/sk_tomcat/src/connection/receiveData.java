@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import conn.ManageData;
 import conn.keeper.KeeperDAO;
 import conn.silver.SilverDAO;
+import conn.silver.vo.SilverAddressVO;
 import conn.silver.vo.SilverHeartRateVO;
 import conn.silver.vo.SilverVO;
 
@@ -37,6 +38,7 @@ public class receiveData extends HttpServlet {
 	private Connect connect;
 	private HashMap<String,String> dataMap;
 	private String db;
+	public static int count=0;
 	
 	/**
      * @see HttpServlet#HttpServlet()
@@ -150,25 +152,37 @@ public class receiveData extends HttpServlet {
 		case "checkEmergency":
 			checkSilverEmergencyStatusProcess(dataMap,request,response);
 			break;
+		case "joinSilver":
+			joinSilverProcess(dataMap,request,response);
+			break;
+		case "joinKeeper":
+			joinKeeperProcess(dataMap,request,response);
+			break;
+		case "checkJoinKeeper":
+			checkJoinKeeperProcess(dataMap,request,response);
+			break;
+		case "checkCreateKeeperID":
+			checkCreateKeeperIDProcess(dataMap,request,response);
+			break;
 		}
 	}
 	protected void checkJoinProcess(HashMap<String,String> dataMap,HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
     {
 		String androidID=dataMap.get("androidID");
 		System.out.println("androidID="+androidID+"\n");
-		String token=dataMap.get("token");
-		System.out.println("token="+token+"\n");
+		//String token=dataMap.get("token");
+		//System.out.println("token="+token+"\n");
 		String silverID=sDAO.selectSilverID(androidID);    			
 		String keeperID=kDAO.selectKeeperID(androidID);
 		HashMap<String,String> sendMap=new HashMap<String,String>();
 		
-		if(silverID!="")
+		if(!silverID.contains("noData"))
 		{
 			sendMap.put("result", "silver");
 			sendMap.put("silverID",silverID);
 			System.out.println("S:"+silverID);
 		}
-		else if(keeperID!="")
+		else if(!keeperID.contains("noData"))
 		{
 			sendMap.put("result", "keeper");
 			sendMap.put("keeperID",keeperID);
@@ -191,6 +205,11 @@ public class receiveData extends HttpServlet {
 		System.out.println("keeperID="+keeperID+"\n");
 		String silverID=kDAO.selectSilverID(keeperID);
 		SilverVO vo=sDAO.selectSilverData(silverID);
+		if(vo==null)
+		{
+			System.out.println("vo==null");
+			return;
+		}
 		HashMap<String,String> sendMap=new HashMap<String,String>();
 		int walkCount=vo.getWalkCount();
 		int heartRate=vo.getHeartRate();
@@ -215,8 +234,12 @@ public class receiveData extends HttpServlet {
 		String silverID=dataMap.get("silverID");
 		System.out.println("silverID="+silverID+"\n");
 		SilverVO vo=sDAO.selectSilverData(silverID);
+		if(vo==null)
+		{
+			return;
+		}
 		int identifyNumber=sDAO.selectIdentifyNumber(silverID);
-		int walkCount=vo.getWalkCount();
+		int walkCount=sDAO.sumWalkCount(silverID);
 		int heartRate=vo.getHeartRate();
 		String currentTime=vo.getCurrentTime();
 		boolean connMiBand=vo.getCheckMiBand();
@@ -262,8 +285,13 @@ public class receiveData extends HttpServlet {
 		SilverVO newData=new SilverVO(Integer.parseInt(heartRate),Integer.parseInt(walkCount),currentTime,conn);
 				
 		int result=sDAO.insertSilverData(silverID, newData);
-		setHeartRateData(silverID);
-		
+		count++;
+		System.out.println("count:"+count);
+		if(count==6)
+		{
+			setHeartRateData(silverID);
+			count=0;
+		}
 		if(result!=0)
 			sendMap.put("insertResult","success");
 		else
@@ -286,7 +314,7 @@ public class receiveData extends HttpServlet {
 		
 		String status;
 		System.out.println("Result:"+result+"\n");
-		if(result<50)
+		if(result<50&&result>=0)
 		{
 			 status="emergency";
 		}
@@ -294,7 +322,7 @@ public class receiveData extends HttpServlet {
 		{
 			status="warning";
 		}
-		else if(result>70)
+		else if(result>=70)
 		{
 			status="safe";
 		}
@@ -309,6 +337,8 @@ public class receiveData extends HttpServlet {
 	}
 	public void setHeartRateData(String silverID)
 	{
+		
+			
 		SilverVO[] voList=sDAO.selectFixtedNumberSilverDataArray(silverID);
 		//ManageData manage=new ManageData();
 		
@@ -341,48 +371,127 @@ public class receiveData extends HttpServlet {
 				}
 			
 			}
-			sDAO.insertHeartRate(silverID, min, max, (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")).format(new Date(System.currentTimeMillis())));
+			sDAO.insertHeartRate(silverID, min, max, (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS")).format(new Date(System.currentTimeMillis())));
 
 	}
-}
-/*SilverVO[] voList=sDAO.selectFixtedNumberSilverDataArray(silverID);
-		//ManageData manage=new ManageData();
+	protected void joinSilverProcess(HashMap<String,String> dataMap,HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+	{
+		HashMap<String,String>sendMap=new HashMap<String,String>();
+		String androidID=dataMap.get("androidID");
+		String raspIP=dataMap.get("raspIP");
+		String token=dataMap.get("token");
+		System.out.println("token:"+token);
 		
-		ArrayList<Integer>maxList=new ArrayList<Integer>();
-		ArrayList<Integer>minList=new ArrayList<Integer>();
-		
-		int i=voList.length/6,
-			j=voList.length%6,
-			temp=0,max=0,min=0,maxTime=0,minTime=0;
-		for(int k=0;k<=i;k++)
+		if(token==null)
 		{
-			for(int x=0;x<6;x++)
-			{
+			token="TOKEN NODATA";
+		}
+		ManageData manage=new ManageData();
+		String newId=manage.createSilverID(androidID);
+		int newIdNum=manage.createIdentifyNumber();
+			sDAO.insertSilverID(newId);
+			sDAO.insertSilverAddress(newId, raspIP, token, "SSIDNODATA");
+			sDAO.insertIdentifyNumber(newId, newIdNum);
+			sendMap.put("result", "success");
+			sendMap.put("silverID", newId);
+			sendMap.put("identifyNumber", newIdNum+"");
+			sendMap.put("token", token);
+			System.out.println("silverID:"+sendMap.get("silverID")+"\n");
+			System.out.println("result:"+sendMap.get("result")+"\n");
+			
+			connect.setData(sendMap, request, response);
+			System.out.println("---------------------------------------------");
 				
-				temp=voList[(6*k)+x].getHeartRate();
-				if(max<temp)
-				{
-					max=temp;
-					maxTime=(6*k)+x;
-				}
-				else if(min>temp)
-				{
-					min=temp;
-					minTime=(6*k)+x;
-				}
-				if(((6*k)+x)==voList.length-1)
-				{
-					break;
-				}
+		
+		
+		
+		
+		
+		
+	}
+	protected void joinKeeperProcess(HashMap<String,String> dataMap,HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+	{
+		HashMap<String,String>sendMap=new HashMap<String,String>();
+		String androidID=dataMap.get("androidID");
+		String inputNumber=dataMap.get("inputNumber");
+		String inputName=dataMap.get("inputName");
+		System.out.println("inputName : "+inputName+"\n");
+		System.out.println("inputNumber: "+inputNumber+"\n");
+		
+		String silverID=sDAO.checkIdentifyNumber(Integer.parseInt(inputNumber));
+		String result;
+		if(silverID==null)
+			{
+				result="noIdNum";
 			}
-			maxList.add(max);
-			minList.add(min);
-		}
-		for(int y=0;y<maxList.size();y++)
+	
+			result="idNumConfirm";
+			SilverAddressVO vo=sDAO.selectSilverAddress(silverID);
+			String silverToken=vo.getSilverToken();
+			if(vo==null)
+			{
+				System.out.println("---------vo is null------\n");
+				return;
+			}
+			sendPushAlarm push=new sendPushAlarm();
+			String message=inputName+"님이 키퍼 등록을 요청하고 있습니다.";
+			String data=message+"|role=joinKeeper|silverID="+silverID+"|KeeperAndroidId="+androidID+"|keeperName="+inputName;
+			System.out.println("data:"+data+"\n");		
+			push.send_FCM_Notification(silverToken, "AAAAB7TI-uE:APA91bFKkm7OJcvHl8dJv8cswAzz7Ulg42odqafOF-9FayoYWvzAIf5VunKRgFBPLDzPSyCjy_BCfURzNU-ojWcHb7ULO23JjsaqdG-a42YCXbmGJ8n-Wmo_qE7Q61TwzQJHpDjSKeOc ", data);
+			/*sendMap.put("silverID",)*/
+		connect.setData(sendMap, request, response);
+		return;
+	}
+	protected void checkJoinKeeperProcess(HashMap<String,String> dataMap,HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
+	{
+		String result=null;
+		String kpAndroid=dataMap.get("KeeperAndroidID");
+		if(kpAndroid==null)
 		{
-			sDAO.insertHeartRate(silverID, minList.get(y), maxList.get(y), (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")).format(new Date(System.currentTimeMillis())));
+			result="fail";
 		}
-	}*/
+		String silverID=dataMap.get("silverID");
+		ManageData manage=new ManageData();
+		String keeperID=manage.createKeeperID(kpAndroid);
+		HashMap<String,String> sendMap=new HashMap<String,String>();
+		if(kDAO.insertKeeperID(silverID, keeperID)!=-1)
+		{
+			result="success";
+			
+		}
+		sendMap.put("keeperID",keeperID);
+		sendMap.put("result",result);
+		
+		
+		connect.setData(sendMap, request, response);
+	}
+	protected void checkCreateKeeperIDProcess(HashMap<String,String> dataMap,HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
+	{
+		String androidID=dataMap.get("androidID");
+		String token=dataMap.get("token");
+		String keeperID=kDAO.selectKeeperID(androidID);
+		String result;
+		HashMap<String,String> sendMap=new HashMap<String,String>();
+		
+		ManageData manage=new ManageData();
+		if(!keeperID.contains("noData"))
+		{
+			result="created";
+			System.out.println("checkCreateKeeperID:"+result);
+			kDAO.insertKeeperToken(keeperID, token);
+		}
+		else
+		{
+			result="fail";
+			System.out.println("checkCreateKeeperID:"+result);
+		}
+			sendMap.put("result", result);
+			System.out.println("----------result:"+result+"-----------");
+			
+			connect.setData(sendMap, request, response);
+	}
+}
+
 
 
 

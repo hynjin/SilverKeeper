@@ -46,11 +46,14 @@ public class ManageData {
       Random rand=new Random();
       while(true)
       {
-         idNum=rand.nextInt(99999);
-         if(this.checkIdentifyNumber(idNum)!="")
+         idNum=rand.nextInt(999999)+100000;
+         String searchResult=this.checkIdentifyNumber(idNum);
+         
+         if(searchResult==null)
          {
-            break;
+           break;
          }
+       
       }
       
       return idNum;
@@ -71,6 +74,10 @@ public class ManageData {
    public int calcMaxAverHeartRate(SilverHeartRateVO[] hrData)
    {
       int sumMax=0,cnt=hrData.length;
+      if(cnt==0)
+      {
+    	  return -1;
+      }
       for(int i=0;i<cnt;i++)
       {
          sumMax+=hrData[i].getMaxHeartRate(); //최대 심박수값 평균을 구하기 위해 총합 계산
@@ -82,6 +89,10 @@ public class ManageData {
    {
       int sumMin=0,cnt=hrData.length;
   
+      if(cnt==0)
+      {
+    	  return -1;
+      }
       for(int i=0;i<cnt;i++)
       {
         sumMin+=hrData[i].getMinHeartRate(); //최소 심박수값들을 저장.
@@ -96,7 +107,11 @@ public class ManageData {
       int maxAver=this.calcMaxAverHeartRate(hrData),
          minAver=this.calcMinAverHeartRate(hrData),
          rate=0,result=0;
-      int cnt=sData.length;
+      if(maxAver==-1||minAver==-1)
+      {
+    	  return -1;
+      }
+    	  int cnt=sData.length;
       System.out.println("----------checkEmergencyLevel-----------\n");
       System.out.println("maxAver="+maxAver+"\n");
       System.out.println("minAver="+minAver+"\n");

@@ -49,7 +49,7 @@ public class sendPushAlarm {
 	JSONObject infoJson = new JSONObject();
 	infoJson.put("title","Here is your notification.");
 	infoJson.put("body", message);
-	
+	//infoJson.put("data", data);
 	
 	JSONObject json = new JSONObject();
 	json.put("to",tokenId.trim());

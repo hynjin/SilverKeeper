@@ -546,7 +546,7 @@ public class SilverDAO {
 				{
 					connMiBand=false;
 				}
-				voList.add(new SilverVO(walkCount,heartRate,currentTime,connMiBand));
+				voList.add(new SilverVO(heartRate,walkCount,currentTime,connMiBand));
 			}
 		} 
 		catch (SQLException se) 
@@ -588,7 +588,11 @@ public class SilverDAO {
 			pstmt.setString(1,silverID);
 			
 			ResultSet rs=pstmt.executeQuery();
-				rs.next();
+				boolean rsnext=rs.next();
+				if(rsnext==false)
+				{
+					return null;
+				}
 				int walkCount=rs.getInt("walkCount");
 				int heartRate=rs.getInt("heartRate");
 				String currentTime=rs.getString("currentTime");
@@ -597,7 +601,7 @@ public class SilverDAO {
 				{
 					connMiBand=false;
 				}
-				vo=new SilverVO(walkCount,heartRate,currentTime,connMiBand);
+				vo=new SilverVO(heartRate,walkCount,currentTime,connMiBand);
 			
 		} 
 		catch (SQLException se) 
@@ -629,6 +633,7 @@ public class SilverDAO {
 	}
 	public SilverVO[] selectFixtedNumberSilverDataArray(String silverID)
 	{
+		
 		ArrayList<SilverVO> voList=new ArrayList<SilverVO>();
 		PreparedStatement pstmt=null;
 		try 
@@ -641,7 +646,7 @@ public class SilverDAO {
 			int i=0;
 			while(rs.next())
 			{	
-				if(i==6)
+				if(i==10)
 				{
 					break;
 				}
@@ -923,15 +928,19 @@ public class SilverDAO {
 		PreparedStatement pstmt=null;
 		try 
 		{
-			String sql="select silverID,identifyNumber from silverIdentifyNumber where identifyNumber=?";
+			String sql="select silverID from silverIdentifyNumber where identifyNumber=?";
 			pstmt=conn.prepareStatement(sql);
 			pstmt.setInt(1,idNum);
 			
 			ResultSet rs=pstmt.executeQuery();
 			while(rs.next())
 			{
-				int result=rs.getInt("identifyNumber");
+				
 				silverID=rs.getString("silverID");
+				if(silverID==null)
+				{
+					break;
+				}
 			}
 		} 
 		catch (SQLException se) 
@@ -979,7 +988,7 @@ public class SilverDAO {
 				{
 					break;
 				}
-				silverID="";
+				silverID="noData";
 			}
 			
 		} 
@@ -1090,6 +1099,51 @@ public class SilverDAO {
 			}
 		}
 		return identifyNumber;
+	}
+
+	public int sumWalkCount(String silverID)
+	{
+		int sum=0;
+		PreparedStatement pstmt=null;
+		try 
+		{
+			String sql="select SUM(walkCount) as sum_walkCount from SilverData where silverID=?";
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setString(1, silverID);
+			ResultSet rs=pstmt.executeQuery();
+
+			while(rs.next())
+			{
+				sum=rs.getInt("sum_walkCount");
+			}
+		} 
+		catch (SQLException se) 
+		{
+			se.printStackTrace();
+			// TODO: handle exception
+		}
+		catch (Exception e) 
+		{
+			e.printStackTrace();
+		}
+		finally
+		{
+			try 
+			{
+				if(pstmt!=null)
+				{
+					pstmt.close();
+				}
+				
+			} 
+			catch (SQLException se) {
+				{
+					se.printStackTrace();
+				}
+			}
+		}
+		
+		return sum;
 	}
 	
 	public static void main(String[] args) {
