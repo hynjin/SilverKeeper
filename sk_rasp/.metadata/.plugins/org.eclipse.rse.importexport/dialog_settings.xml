@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<section name="RemoteExportWizard">
+		<item value="/sk_rasp/stream.rexpfd" key="RemoteExportWizard.STORE_DESCRIPTION_FILE_NAME_ID"/>
+		<item value="true" key="RemoteExportWizard.STORE_CREATE_DESCRIPTION_FILE_ID"/>
+		<item value="false" key="RemoteExportWizard.STORE_OVERWRITE_EXISTING_FILES_ID"/>
+		<item value="true" key="RemoteExportWizard.STORE_REVIEW_SYNCHRONIZE_ID"/>
+		<item value="false" key="RemoteExportWizard.STORE_CREATE_STRUCTURE_ID"/>
+		<list key="RemoteExportWizard.STORE_DESTINATION_NAMES_ID">
+			<item value="gimhyeojinuiAir.raspberry:/home/pi/stream"/>
+		</list>
+	</section>
+</section>

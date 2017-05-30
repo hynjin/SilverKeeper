@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<section name="SynchronizeViewSettings">
+		<item value="1496065900465" key="lastactiveparticipant_sec_id"/>
+		<item value="org.eclipse.rse.internal.synchronize.filesystem.participant" key="lastactiveparticipant_id"/>
+		<item value="false" key="linkWithEditor"/>
+		<section name="org.eclipse.rse.internal.synchronize.filesystem.participant.1496065900465">
+			<item value="org.eclipse.team.ui.activeModelProvider" key="org.eclipse.team.ui.activeModelProvider"/>
+		</section>
+	</section>
+</section>

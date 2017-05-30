@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<rexpfd>
+    <destination path="gimhyeojinuiAir.raspberry:/home/pi/stream"/>
+    <options createDirectoryStructure="false" createSelectedOnly="true" descriptionFilePath="/sk_rasp/stream.rexpfd" overWriteExistingFiles="false" reviewSynchronize="true" saveSettings="true"/>
+    <selectedElements>
+        <project name="sk_rasp"/>
+    </selectedElements>
+</rexpfd>
