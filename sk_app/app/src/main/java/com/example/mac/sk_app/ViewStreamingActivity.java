@@ -14,12 +14,11 @@ public class ViewStreamingActivity extends AppCompatActivity {
     Button returnBtn;
     String keeperID,raspIP;
     Context context;
-    WebView webView;
+    WebView web;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_streaming);
-
         /*Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -35,21 +34,6 @@ public class ViewStreamingActivity extends AppCompatActivity {
         context=this;
         raspIP=getIntent().getStringExtra("raspIP");
         keeperID=getIntent().getStringExtra("keeperID");
-
-
-        webView = (WebView) findViewById(R.id.viewStreaming);
-        webView.setWebViewClient(new WebViewClient());
-        webView .getSettings().setJavaScriptEnabled(true);
-        webView .getSettings().setDomStorageEnabled(true);
-        webView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
-        webView.getSettings().setBuiltInZoomControls(true);
-        webView.getSettings().setSupportZoom(true);
-        webView.loadUrl("http://210.99.36.84:8888");
-        //webView.loadUrl(raspIP);
-
-
-
-
         returnBtn=(Button)findViewById(R.id.returnViewKData);
         returnBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,6 +45,14 @@ public class ViewStreamingActivity extends AppCompatActivity {
 
             }
         });
+        web=(WebView)findViewById(R.id.viewStreaming);
+        web.setWebViewClient(new WebViewClient());
+        WebSettings setting=web.getSettings();
+        setting.setJavaScriptEnabled(true);
+        setting.setBuiltInZoomControls(true);
+        web.loadUrl("http://"+raspIP);
+
+        System.out.println("raspIP:"+raspIP);
     }
 
 }
