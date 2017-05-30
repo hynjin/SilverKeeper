@@ -37,11 +37,19 @@ public class Loading extends AppCompatActivity {
             intent.putExtra("keeperName",getIntent().getStringExtra("keeperName"));
             startActivity(intent);
             finish();
-            return;
+
+        }
+        else if(getIntent().getStringExtra("raspIP")!=null)
+        {
+            Intent intent=new Intent(this,ViewStreamingActivity.class);
+            intent.putExtra("raspIP",getIntent().getStringExtra("raspIP"));
+            startActivity(intent);
+            finish();
+
         }
         else
             LoadingActivity();
-            return;
+
     }
     private void LoadingActivity() {
         Handler handler = new Handler() {
@@ -136,9 +144,9 @@ public class Loading extends AppCompatActivity {
                 StringTokenizer st2=new StringTokenizer(temp,"=");
                 while(st2.hasMoreTokens())
                 {
+                    String key=st2.nextToken();
                     String value=st2.nextToken();
-                    String result=st2.nextToken();
-                    results.put(value,result);
+                    results.put(key,value);
                 }
             }
             System.out.println("value:"+value);

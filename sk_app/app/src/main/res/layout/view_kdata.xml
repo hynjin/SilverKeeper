@@ -1,19 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF">
+    android:background="#FFFFFF"
+    android:weightSum="1">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="right"
+        android:weightSum="1"
+        android:layout_weight="0.66">
+
+            <ImageButton
+                android:id="@+id/syncBtnKeeper"
+                android:layout_width="wrap_content"
+                android:layout_height="51dp"
+                android:layout_weight="0.10"
+                />
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/statusImage"
+        android:layout_width="match_parent"
+        android:layout_height="68dp"
+        app:srcCompat="@drawable/gray" />
     <!--데이터 보기(키퍼 화면)-->
     <TextView
         android:id="@+id/heart"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
         android:layout_gravity="center_horizontal"
-        android:textSize="50dp"
+        android:layout_marginTop="50dp"
+        android:text="현재 심박수"
         android:textColor="#000000"
-        android:text="현재 심박수" />
+        android:textSize="50dp" />
 
     <TextView
         android:id="@+id/heartRate"

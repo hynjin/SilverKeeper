@@ -3,7 +3,7 @@
     package="com.example.mac.sk_app">
 
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
-    <uses-permission android:name="android.permission.BLUETOOTH"/>
+    <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -34,6 +34,13 @@
         <activity android:name=".ViewKdata" />
         <activity android:name=".RejectKeeper" />
         <activity android:name=".SuccessVerification" />
+        <activity android:name=".CheckJoinKeeper">
+            <intent-filter>
+                <action android:name="OPEN_ACTIVITY1" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         //FCM
         <service
             android:name=".MyFireBaseMessagingService"
@@ -53,10 +60,9 @@
         </service>
 
         <activity
-            android:name=".JoinKeeperCheck"
-            android:label="@string/title_activity_join_keeper_check"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".checkJoinKeeper"></activity>
+            android:name=".ViewStreamingActivity"
+            android:label="@string/title_activity_view_streaming"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

@@ -70,6 +70,8 @@ public class MyFireBaseMessagingService extends com.google.firebase.messaging.Fi
         else if(hashMap.get("role").contains("viewStreaming"))
         {
             //라즈베리파이 스트리밍에 관한 처리 필요.
+            intent.putExtra("keeperID",hashMap.get("silverID"));
+            intent.putExtra("raspIP",hashMap.get("raspIP"));
         }
         //intent.putExtra("silverID",hashMap.get("silverID"));
         System.out.println(hashMap.get("silverID")+","+hashMap.get("KeeperAndroidId"));

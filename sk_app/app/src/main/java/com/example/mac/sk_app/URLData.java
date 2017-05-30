@@ -5,5 +5,5 @@ package com.example.mac.sk_app;
  */
 
 public class URLData {
-    public static final String url="http://222.108.243.233:8089/sk_tomcat/receiveData.do";
+    public static final String url="http://221.151.152.124:8089/sk_tomcat/receiveData.do";
 }

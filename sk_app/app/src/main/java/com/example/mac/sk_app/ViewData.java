@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -30,6 +31,7 @@ import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Random;
 import java.util.StringTokenizer;
+
 /**
  * Created by 차민광01027370165 on 2017-05-11.
  */
@@ -39,11 +41,12 @@ public class ViewData extends AppCompatActivity {
 
     TextView heartText,walkText,walkCount,heartRate,testIdNum;
     ImageView statusView;
+    ImageButton syncBtn;
     String silverID;
     HashMap<String,String> results;
     RequestSilver rs;
     SendSilverData ssd;
-    RequestSilverStatus rss;
+    //RequestSilverStatus rss;
     String param1,param2,param3;
     String identifyNumber;
     Random rand=new Random();
@@ -76,11 +79,13 @@ public class ViewData extends AppCompatActivity {
         @Override
         public void onNotify(final int heartRate) {
             hRate = heartRate;
+            System.out.println("hRate:"+hRate);
             param2="getMethod=receiveSilverData&silverID="+silverID;
             param2+="&heartRate="+hRate+"&walkCount="+wCount+"&currentTime="+(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS")).format(new Date(System.currentTimeMillis()))+"&connMiBand="+connMiBand;
             System.out.println("param2:"+param2);
             ssd=new SendSilverData();
             ssd.execute(param2);
+
             /*runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -216,12 +221,16 @@ public class ViewData extends AppCompatActivity {
 
 
         setContentView(R.layout.view_data);
+
         Intent intent=getIntent();
         silverID=intent.getStringExtra("silverID");
-        identifyNumber=intent.getStringExtra("identifyNumber");
+        //identifyNumber=intent.getStringExtra("identifyNumber");
         System.out.println("SILVERID:"+silverID);
+
         param1="getMethod=sendSilverData&silverID="+silverID;
         rs=new RequestSilver();
+
+
         //param2="getMethod=receiveSilverData&silverID="+silverID;
         //hRate=rand.nextInt(101)+50;
         //wCount=rand.nextInt(201);
@@ -233,15 +242,24 @@ public class ViewData extends AppCompatActivity {
         //else connMiBand=false;
 
         //param2+="&heartRate="+hRate+"&walkCount="+wCount+"&currentTime="+(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS")).format(new Date(System.currentTimeMillis()))+"&connMiBand="+connMiBand;
-        rs.execute(param1);
+      rs.execute(param1);
         //ssd=new SendSilverData();
         //ssd.execute(param2);
-        param3="getMethod=checkEmergency&silverID="+silverID;
+        /*param3="getMethod=checkEmergency&silverID="+silverID;
         rss=new RequestSilverStatus();
-        rss.execute(param3);
+        rss.execute(param3);*/
 
         miband.startHeartRateScan(1, mibandCallback,heartrateNotifyListener);
         miband.setHeartRateScanListener(heartrateNotifyListener);
+        //새로고침 버튼 설정. ClickListener 동작시 RequestSilver AsyncTask작동하도록.
+        syncBtn=(ImageButton)findViewById(R.id.syncBtnSilver);
+        syncBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                rs=new RequestSilver();
+                rs.execute(param1);
+            }
+        });
     }
     public void ok(View view) {
         Intent intent = new Intent(this, CheckIdentity.class);
@@ -259,24 +277,20 @@ public class ViewData extends AppCompatActivity {
         finish();
     }
     public class RequestSilver extends AsyncTask<String, Void, String> {
-        private String url=URLData.url;;//"http://222.108.243.141:8089/sk_tomcat/receiveData.do";
+        private String url= URLData.url;//"http://222.108.243.141:8089/sk_tomcat/receiveData.do";
         //private String result;
         private HttpURLConnection conn;
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            try{
-                URL obj = new URL(url);
-                conn = (HttpURLConnection) obj.openConnection();
-                Thread.sleep(1000);
+                try{
+                    URL obj = new URL(url);
+                    conn = (HttpURLConnection) obj.openConnection();
+                    Thread.sleep(1000);
             }
             catch(Exception e)
             {}
-
-
-        /* "http://silverkeeper.iptime.org/sk_server/receiveSilverData";*/
-
         }
 
         @Override
@@ -293,6 +307,10 @@ public class ViewData extends AppCompatActivity {
             while(st.hasMoreTokens())
             {
                 String data = st.nextToken();
+                if(data==null)
+                {
+                    return;
+                }
                 String temp=data;
                 StringTokenizer st2=new StringTokenizer(temp,"=");
                 while(st2.hasMoreTokens())
@@ -308,89 +326,49 @@ public class ViewData extends AppCompatActivity {
             heartRate=(TextView)findViewById(R.id.heartRate2);
             walkCount=(TextView)findViewById(R.id.walkCount2);
             testIdNum=(TextView)findViewById(R.id.testIdNum);
+            statusView=(ImageView)findViewById(R.id.statusImage);
             heartRate.setText(results.get("heartRate"));
             walkCount.setText(results.get("walkCount"));
             testIdNum.setText(results.get("identifyNumber"));
             identifyNumber=results.get("identifyNumber");
-           /* Enumeration<String> parameterNames = request.getParameterNames();
-            while (parameterNames.hasMoreElements())
-            {
-                String name = (String) parameterNames.nextElement();
-                if(name.equals("getMethod"))
-                    type = request.getParameter(name);
-                else
-                    dataMap.put(name, request.getParameter(name));
-                System.out.println(name + "=" + request.getParameter(name));
+            String status=results.get("status");
+            if(status!=null){
+                if(status.contains("emergency"))
+                {
+                    statusView.setImageResource(R.drawable.red);
+                }
+                else if(status.contains("warning"))
+                {
+                    statusView.setImageResource(R.drawable.yellow);
+                }
+                else if(status.contains("safe"))
+                {
+                    statusView.setImageResource(R.drawable.green);
+                }
             }
-            return dataMap;*/
 
-            rs=new RequestSilver();
-            rs.execute(param1);
+
+           /* rs=new RequestSilver();
+            rs.execute(param1);*/
+
            conn.disconnect();
        }
    }
-    public class RequestSilverStatus extends AsyncTask<String, Void, String> {
-        private String url=URLData.url;;//"http://222.108.243.141:8089/sk_tomcat/receiveData.do";
-        //private String result;
-        private HttpURLConnection conn;
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            try{
-                URL obj = new URL(url);
-                conn = (HttpURLConnection) obj.openConnection();
-                Thread.sleep(1000);
-            }
-            catch(Exception e)
-            {}
-
-
-        /* "http://silverkeeper.iptime.org/sk_server/receiveSilverData";*/
-
-        }
-
-        @Override
-        public String doInBackground(String... params) {
-            return BackgroundDoing(conn,params);
-        }
-        @Override
-        protected void onPostExecute(String res)
-        {
-            super.onPostExecute(res);
-            StringTokenizer st=new StringTokenizer(res,"=");
-            statusView=(ImageView)findViewById(R.id.statusImage);
-                String status = st.nextToken();
-                String value = st.nextToken();
-            if(value.contains("emergency"))
-            {
-                statusView.setImageResource(R.drawable.red);
-            }
-            else if(value.contains("warning"))
-            {
-                statusView.setImageResource(R.drawable.yellow);
-            }
-            else if(value.contains("safe"))
-            {
-                statusView.setImageResource(R.drawable.green);
-            }
-            System.out.println("Result status!:"+res);
-            rss=new RequestSilverStatus();
-            rss.execute(param3);
-            conn.disconnect();
-        }
-    }
     public class SendSilverData extends AsyncTask<String, Void, String> {
-        private String url=URLData.url;;//"http://222.108.243.141:8089/sk_tomcat/receiveData.do";
+        private String url= URLData.url;
+        //"http://222.108.243.141:8089/sk_tomcat/receiveData.do";
         //private String result;
         private HttpURLConnection conn;
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            try{
-                URL obj = new URL(url);
-                conn = (HttpURLConnection) obj.openConnection();
+
+
+           try{
+            URL obj = new URL(url);
+                 conn = (HttpURLConnection) obj.openConnection();
                 //Thread.sleep(1000);
             }
             catch(Exception e)
@@ -434,8 +412,9 @@ public class ViewData extends AppCompatActivity {
     public String BackgroundDoing(HttpURLConnection conn,String... params){
         String result = new String();
         try {
-            //URL obj = new URL(url);
-            //conn = (HttpURLConnection) obj.openConnection();
+
+//            URL obj = new URL(url);
+//            conn = (HttpURLConnection) obj.openConnection();
 
                 /*conn.setReadTimeout(10000);*/
             /*conn.setConnectTimeout(15000);*/

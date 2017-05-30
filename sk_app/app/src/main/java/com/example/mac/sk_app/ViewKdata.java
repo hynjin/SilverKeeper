@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.io.ByteArrayOutputStream;
@@ -27,6 +28,7 @@ public class ViewKdata extends AppCompatActivity {
     HashMap<String,String> results;
     RequestKeeper rk;
     String param;
+    ImageButton syncBtn;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -37,6 +39,16 @@ public class ViewKdata extends AppCompatActivity {
         param="getMethod=sendSilverDataToKeeper&keeperID="+keeperID;
         rk=new RequestKeeper();
        rk.execute(param);
+        syncBtn=(ImageButton)findViewById(R.id.syncBtnKeeper);
+        syncBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                rk=new RequestKeeper();
+                rk.execute(param);
+            }
+        });
+
+
     }
     public void cancel(View view) {             //처음으로 돌아가기
         Intent intent = new Intent(this, Loading.class);
@@ -152,8 +164,7 @@ public class ViewKdata extends AppCompatActivity {
             }
             return dataMap;*/
             conn.disconnect();
-            rk=new RequestKeeper();
-            rk.execute(param);
+
 
 
         }
