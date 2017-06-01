@@ -24,13 +24,13 @@ public class ManageData {
    {
 	   return mData;
    }
-   public String createSilverID(String androidID)
+   public String createSilverID(String androidID)		//안드로이드ID 이용해 실버ID 생성(앞에 SV_ 붙임)
    {
       String silverID="SV_"+androidID;
       
       return silverID;
    }
-   public String createKeeperID(String androidID)
+   public String createKeeperID(String androidID)		//안드로이드ID 이용해 키퍼ID 생성(앞에 KP_ 붙임)
    {
       String keeperID="KP_"+androidID;
       
@@ -40,10 +40,10 @@ public class ManageData {
    {
       return true;
    }
-   public int createIdentifyNumber()
+   public int createIdentifyNumber()		//인증번호 생성
    {
       int idNum=0;
-      Random rand=new Random();
+      Random rand=new Random();				//랜덤으로 생성
       while(true)
       {
          idNum=rand.nextInt(999999)+100000;
@@ -58,7 +58,7 @@ public class ManageData {
       
       return idNum;
    }
-   public String checkIdentifyNumber(int identifyNumber)
+   public String checkIdentifyNumber(int identifyNumber)	//인증번호 체크
    {
       return sDao.checkIdentifyNumber(identifyNumber);
    }
@@ -71,7 +71,7 @@ public class ManageData {
       }*/
       return true;
    }
-   public int calcMaxAverHeartRate(SilverHeartRateVO[] hrData)
+   public int calcMaxAverHeartRate(SilverHeartRateVO[] hrData)	//최대평균심박수 구하기
    {
       int sumMax=0,cnt=hrData.length;
       if(cnt==0)
@@ -80,12 +80,12 @@ public class ManageData {
       }
       for(int i=0;i<cnt;i++)
       {
-         sumMax+=hrData[i].getMaxHeartRate(); //최대 심박수값 평균을 구하기 위해 총합 계산
+         sumMax+=hrData[i].getMaxHeartRate(); //理쒕? ?щ컯?섍컪 ?됯퇏??援ы븯湲??꾪빐 珥앺빀 怨꾩궛
       }
       return sumMax/cnt;
    }
    
-   public int calcMinAverHeartRate(SilverHeartRateVO[] hrData)
+   public int calcMinAverHeartRate(SilverHeartRateVO[] hrData)	//최소평균심박수 구하기
    {
       int sumMin=0,cnt=hrData.length;
   
@@ -95,13 +95,13 @@ public class ManageData {
       }
       for(int i=0;i<cnt;i++)
       {
-        sumMin+=hrData[i].getMinHeartRate(); //최소 심박수값들을 저장.
+        sumMin+=hrData[i].getMinHeartRate(); //理쒖냼 ?щ컯?섍컪?ㅼ쓣 ???
         
       }
       
       return sumMin/cnt;
    }
-   public int checkEmergencyLevel(SilverHeartRateVO[] hrData, SilverVO[] sData)
+   public int checkEmergencyLevel(SilverHeartRateVO[] hrData, SilverVO[] sData)	//위험레벨 구하기
    {
       int status=0;
       int maxAver=this.calcMaxAverHeartRate(hrData),
@@ -168,7 +168,7 @@ public class ManageData {
       
       return max;
    }
-   public int calcMinHeartRate(SilverVO[] silverData)
+   public int calcMinHeartRate(SilverVO[] silverData)		//최소심박수 계산
    {
       int min=0;
       int temp=0;
@@ -182,25 +182,26 @@ public class ManageData {
       }
       return min;
    }
+
 /*   public int calcAverHeartRate(SilverHeartRateVO[] hrData)
    {
       int cnt=hrData.length;
       int maxAver=0,minAver=0,sumMax=0,sumMin=0,rate=0,result=0;
       
-      ArrayList<Integer> maxHeartRate=new ArrayList<Integer>();//최대 심박수값들을 저장한 배열 선언
-      ArrayList<Integer> minHeartRate=new ArrayList<Integer>();//최소 심박수값들을 저장한 배열 선언
+      ArrayList<Integer> maxHeartRate=new ArrayList<Integer>();//理쒕? ?щ컯?섍컪?ㅼ쓣 ??ν븳 諛곗뿴 ?좎뼵
+      ArrayList<Integer> minHeartRate=new ArrayList<Integer>();//理쒖냼 ?щ컯?섍컪?ㅼ쓣 ??ν븳 諛곗뿴 ?좎뼵
       for(int i=0;i<cnt;i++)
       {
-         maxHeartRate.add(hrData[i].getMaxHeartRate()); //최대 심박수값들을 저장
-         minHeartRate.add(hrData[i].getMinHeartRate()); //최소 심박수값들을 저장.
+         maxHeartRate.add(hrData[i].getMaxHeartRate()); //理쒕? ?щ컯?섍컪?ㅼ쓣 ???
+         minHeartRate.add(hrData[i].getMinHeartRate()); //理쒖냼 ?щ컯?섍컪?ㅼ쓣 ???
       }
       for(int i=0;i<cnt;i++)
       {
-         sumMax+=maxHeartRate.get(i); //최대 심박수값 평균을 구하기 위해 총합 계산
-         sumMin+=minHeartRate.get(i); //최소 심박수값 평균을 구하기 위해 총합 계산
+         sumMax+=maxHeartRate.get(i); //理쒕? ?щ컯?섍컪 ?됯퇏??援ы븯湲??꾪빐 珥앺빀 怨꾩궛
+         sumMin+=minHeartRate.get(i); //理쒖냼 ?щ컯?섍컪 ?됯퇏??援ы븯湲??꾪빐 珥앺빀 怨꾩궛
       }
-      maxAver=sumMax/cnt; //최대 심박수값 평균계산
-      minAver=sumMin/cnt; //최소 심박수값 평균계산
+      maxAver=sumMax/cnt; //理쒕? ?щ컯?섍컪 ?됯퇏怨꾩궛
+      minAver=sumMin/cnt; //理쒖냼 ?щ컯?섍컪 ?됯퇏怨꾩궛
       
       
       return result;

@@ -28,7 +28,7 @@ public class SilverDAO {
 	{
 		return silverDAO;
 	}*/
-	//������ �Է�
+	//占쏙옙占쏙옙占쏙옙 占쌉뤄옙
 	public int insertSilverID(String silverID)
 	{
 		int rowNum = 0;
@@ -241,7 +241,7 @@ public class SilverDAO {
 		return rowNum;
 	}
 	
-	//������ ����
+	//占쏙옙占쏙옙占쏙옙 占쏙옙占쏙옙
 	public int updateSilverData(String silverID, SilverVO silverVO)
 	{
 		int rowNum = 0;
@@ -523,7 +523,7 @@ public class SilverDAO {
 		return rowNum;
 	}
 	
-	//������ �˻�
+	//占쏙옙占쏙옙占쏙옙 占싯삼옙
 	
 	public SilverVO[] selectSilverDataArray(String silverID)
 	{
@@ -576,7 +576,7 @@ public class SilverDAO {
 		}
 		return voList.toArray(new SilverVO[voList.size()]);
 	}
-	//데이터 1개 꺼내오는 연산 추가-태영 0524 2236
+	//?곗씠??1媛?爰쇰궡?ㅻ뒗 ?곗궛 異붽?-?쒖쁺 0524 2236
 	public SilverVO selectSilverData(String silverID)
 	{
 		SilverVO vo=new SilverVO();
@@ -970,7 +970,7 @@ public class SilverDAO {
 		}
 			return silverID;
 	}
-	//2017-5-18 18:46 추가. 안드로이드 ID로 실버 식별번호 찾는 연산. 
+	//2017-5-18 18:46 異붽?. ?덈뱶濡쒖씠??ID濡??ㅻ쾭 ?앸퀎踰덊샇 李얜뒗 ?곗궛. 
 	public String selectSilverID(String androidID)
 	{
 		String silverID="noData";
@@ -1019,7 +1019,7 @@ public class SilverDAO {
 		}
 		return silverID;
 	}
-	//2017-5-18 19:20 추가. 인증번호 입력하는 연산. 
+	//2017-5-18 19:20 異붽?. ?몄쬆踰덊샇 ?낅젰?섎뒗 ?곗궛. 
 	public int insertIdentifyNumber(String silverID, int identifyNumber)
 	{
 		int rowNum = 0;
@@ -1057,7 +1057,7 @@ public class SilverDAO {
 		}
 		return rowNum;
 	}
-	//2017-5-18 19:28 추가. 인증번호 찾는 연산. 
+	//2017-5-18 19:28 異붽?. ?몄쬆踰덊샇 李얜뒗 ?곗궛. 
 	public int selectIdentifyNumber(String silverID)
 	{
 		int identifyNumber=-1;

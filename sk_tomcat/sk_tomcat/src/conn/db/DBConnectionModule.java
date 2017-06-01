@@ -22,7 +22,9 @@ public class DBConnectionModule implements Serializable{
 	
 	private DBConnectionModule() {
 		// TODO Auto-generated constructor stub
-		this("jdbc:oracle:thin:@127.0.0.1:1521:XE","tybaek","ws1541235");//jdbc:mysql://localhost:3306/dbTest","root","root");
+		this("jdbc:oracle:thin:@127.0.0.1:1521:ORCL","silver", "Qkq14011094");
+		//"tybaek","ws1541235");
+		//jdbc:mysql://localhost:3306/dbTest","root","root");
 	}
 
 	private DBConnectionModule(String url, String dbId, String dbPwd) {
@@ -33,7 +35,7 @@ public class DBConnectionModule implements Serializable{
 		connect();
 	}
 	private void connect(){
-		try{
+	try{
 			Class.forName("oracle.jdbc.driver.OracleDriver");
 			conn = DriverManager.getConnection(url, dbId, dbPwd);
 		}

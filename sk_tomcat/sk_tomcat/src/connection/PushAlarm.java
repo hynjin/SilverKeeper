@@ -102,14 +102,14 @@ public class PushAlarm {//extends HttpServlet {
             JSONObject json = new JSONObject();
             JSONObject info = new JSONObject();
 
-            info.put("body", "푸쉬 발송 테스트 입니다."); // Notification body
+            info.put("body", "푸쉬 발송 테스트입니다."); // Notification body
 
             json.put("notification", info);
             json.put("to", bKey); // deviceID
 
             try(OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream())){
-    //혹시나 한글 깨짐이 발생하면 
-    //try(OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream(), "UTF-8")){ 인코딩을 변경해준다.
+    //?뱀떆???쒓? 源⑥쭚??諛쒖깮?섎㈃ 
+    //try(OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream(), "UTF-8")){ ?몄퐫?⑹쓣 蹂寃쏀빐以??
 
                 wr.write(json.toString());
                 wr.flush();

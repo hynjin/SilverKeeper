@@ -38,7 +38,6 @@ public class receiveData extends HttpServlet {
 	private Connect connect;
 	private HashMap<String,String> dataMap;
 	private String db;
-	public static int count=0;
 	
 	/**
      * @see HttpServlet#HttpServlet()
@@ -93,7 +92,7 @@ public class receiveData extends HttpServlet {
 			break;
 		case "sendRole":
 			break;
-		//태영추가
+		//?쒖쁺異붽?
 		case "checkJoin":
 			checkJoinProcess(dataMap, request, response);
 			break;
@@ -136,17 +135,17 @@ public class receiveData extends HttpServlet {
 			break;
 		case "sendRole":
 			break;*/
-		//태영추가
-		case "checkJoin": //사용자가 신규 사용자인지, 기존 사용자인지 구분하는 연산.
+		//?쒖쁺異붽?
+		case "checkJoin": //?ъ슜?먭? ?좉퇋 ?ъ슜?먯씤吏, 湲곗〈 ?ъ슜?먯씤吏 援щ텇?섎뒗 ?곗궛.
 			checkJoinProcess(dataMap, request, response);
 			break;
-		case "sendSilverDataToKeeper": //키퍼로부터 식별번호를 받아, 해당하는 실버의 정보를 보내는 연산
+		case "sendSilverDataToKeeper": //?ㅽ띁濡쒕????앸퀎踰덊샇瑜?諛쏆븘, ?대떦?섎뒗 ?ㅻ쾭???뺣낫瑜?蹂대궡???곗궛
 			sendSilverDataToKeeperProcess(dataMap,request,response);
 			break;
-		case "sendSilverData" ://실버로부터 식별번호를 받아, 해당 정보를 보내는 연산
+		case "sendSilverData" ://?ㅻ쾭濡쒕????앸퀎踰덊샇瑜?諛쏆븘, ?대떦 ?뺣낫瑜?蹂대궡???곗궛
 			sendSilverDataProcess(dataMap,request,response);
 			break;
-		case "receiveSilverData": //실버로부터 실버의 생체데이터를 받아 수집하여 계산하는 연산.
+		case "receiveSilverData": //?ㅻ쾭濡쒕????ㅻ쾭???앹껜?곗씠?곕? 諛쏆븘 ?섏쭛?섏뿬 怨꾩궛?섎뒗 ?곗궛.
 			receiveSilverDataProcess(dataMap,request,response);
 			break;
 		/*case "checkEmergency":
@@ -163,6 +162,9 @@ public class receiveData extends HttpServlet {
 			break;
 		case "checkCreateKeeperID":
 			checkCreateKeeperIDProcess(dataMap,request,response);
+			break;
+		case "requestSOS":
+			requestSOSProcess(dataMap,request,response);
 			break;
 		}
 	}
@@ -212,12 +214,12 @@ public class receiveData extends HttpServlet {
 			return;
 		}
 		HashMap<String,String> sendMap=new HashMap<String,String>();
-		int walkCount=vo.getWalkCount();
+		int walkCount=sDAO.sumWalkCount(silverID);
 		int heartRate=vo.getHeartRate();
 		String currentTime=vo.getCurrentTime();
 		boolean connMiBand=vo.getCheckMiBand();
 		
-		//silver Emergency 상황 체크 연산 추가.
+		//silver Emergency ?곹솴 泥댄겕 ?곗궛 異붽?.
 				SilverHeartRateVO[] hrList=sDAO.selectSilverHeartRateVO(silverID);
 				SilverVO[] voList=sDAO.selectFixtedNumberSilverDataArray(silverID);
 				
@@ -250,9 +252,9 @@ public class receiveData extends HttpServlet {
 				if(status.contains("emergency"))
 				{
 					sendPushAlarm push=new sendPushAlarm();
-					String message="보호대상자에게 이상 현상 발생. 영상 스트리밍으로 연결합니다.";
-					String keeperToken=kDAO.selectKeeperToken(keeperID);
+					String message="보호대상자에게 이상현상 발생. 영상 스트리밍으로 연결합니다.";
 					SilverAddressVO addr =sDAO.selectSilverAddress(silverID);
+					String keeperToken=kDAO.selectKeeperToken(keeperID);
 					String raspIP=addr.getRassberryPiURL();
 					String data=message+"|role=viewStreaming|keeperID="+keeperID+"|raspIP="+raspIP;
 					System.out.println("data:"+data+"\n");		
@@ -290,7 +292,7 @@ public class receiveData extends HttpServlet {
 		HashMap<String,String> sendMap=new HashMap<String,String>();
 		
 		
-		//silver Emergency 상황 체크 연산 추가.
+		//silver Emergency ?곹솴 泥댄겕 ?곗궛 異붽?.
 		SilverHeartRateVO[] hrList=sDAO.selectSilverHeartRateVO(silverID);
 		SilverVO[] voList=sDAO.selectFixtedNumberSilverDataArray(silverID);
 		
@@ -322,7 +324,7 @@ public class receiveData extends HttpServlet {
 		//
 		if(status.contains("emergency"))
 		{
-			//키퍼앱으로 푸시알림 보내는 연산 추가 필요.
+			//?ㅽ띁?깆쑝濡??몄떆?뚮┝ 蹂대궡???곗궛 異붽? ?꾩슂.
 			
 		}
 		
@@ -343,7 +345,7 @@ public class receiveData extends HttpServlet {
 		sendMap.put("identifyNumber", identifyNumber+"");
 		sendMap.put("status",status);
 		/*sendPushAlarm push=new sendPushAlarm();
-		String message="보호대상자에게 이상 현상 발생. 영상 스트리밍으로 연결합니다.";
+		String message="蹂댄샇??곸옄?먭쾶 ?댁긽 ?꾩긽 諛쒖깮. ?곸긽 ?ㅽ듃由щ컢?쇰줈 ?곌껐?⑸땲??";
 		
 		SilverAddressVO addr =sDAO.selectSilverAddress(silverID);
 		String silverToken=addr.getSilverToken();
@@ -379,9 +381,7 @@ public class receiveData extends HttpServlet {
 		SilverVO newData=new SilverVO(Integer.parseInt(heartRate),Integer.parseInt(walkCount),currentTime,conn);
 				
 		int result=sDAO.insertSilverData(silverID, newData);
-		
-		System.out.println("count:"+count);
-		
+
 		setHeartRateData(silverID);
 		
 		if(result!=0)
@@ -586,8 +586,28 @@ public class receiveData extends HttpServlet {
 			
 			connect.setData(sendMap, request, response);
 	}
+	protected void requestSOSProcess(HashMap<String,String> dataMap,HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
+    {
+		String silverID=dataMap.get("silverID");
+		
+		sendPushAlarm push=new sendPushAlarm();
+		String message="보호대상자에게 이상현상 발생. 영상 스트리밍으로 연결합니다.";
+		SilverAddressVO addr =sDAO.selectSilverAddress(silverID);
+		String[] keeperIDs=kDAO.selectAllKeeperID(silverID);
+		for(int i=0;i<keeperIDs.length;i++)
+		{
+			
+		String keeperToken=kDAO.selectKeeperToken(keeperIDs[i]);
+		String raspIP=addr.getRassberryPiURL();
+		System.out.println("----------requestSOSProcess------------");
+		System.out.println("keeperToken:"+keeperToken+"\n");
+		System.out.println("raspIP:"+raspIP+"\n");
+		String data=message+"|role=viewStreaming|keeperID="+keeperIDs[i]+"|raspIP="+raspIP;
+		System.out.println("data:"+data+"\n");		
+		push.send_FCM_Notification(keeperToken, "AAAAB7TI-uE:APA91bFKkm7OJcvHl8dJv8cswAzz7Ulg42odqafOF-9FayoYWvzAIf5VunKRgFBPLDzPSyCjy_BCfURzNU-ojWcHb7ULO23JjsaqdG-a42YCXbmGJ8n-Wmo_qE7Q61TwzQJHpDjSKeOc ", data);
+		}
+    }
 }
-
 
 
 

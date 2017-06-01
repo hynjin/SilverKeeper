@@ -51,12 +51,12 @@ public class httpServlet extends HttpServlet {
         
         
         out.print("아이디="+id);
-        out.print("비밀번호="+passwd+"<br>");
+        out.print("패스워드="+passwd+"<br>");
         out.print("silverID="+silver+"<br>");
         out.print("heartRate="+heart+"<br>");
         out.print("stepCnt="+step+"<br>");
         System.out.println("아이디="+id+"<br>");
-        System.out.println("비밀번호="+passwd+"<br>");
+        System.out.println("패스워드="+passwd+"<br>");
         System.out.println("silverID="+silver+"<br>");
         System.out.println("heartRate="+heart+"<br>");
         System.out.println("stepCnt="+step+"<br>");

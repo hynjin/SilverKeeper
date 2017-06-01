@@ -82,7 +82,7 @@ return "heartRate="+this.heartRate+"&"+
 }
 /*public String toStringDB()
 {
-//checkMiBand가 끝에 있으면 true 값이 null로 넘어감..왜지..중간에 있으면 문제 없음!
+//checkMiBand媛 ?앹뿉 ?덉쑝硫?true 媛믪씠 null濡??섏뼱媛?.?쒖?..以묎컙???덉쑝硫?臾몄젣 ?놁쓬!
 return this.heartRate+","+this.walkCount+","+this.identifyNumber+","+this.checkMiBand+","+"'"+this.currentTime+"'";
 }
 */
