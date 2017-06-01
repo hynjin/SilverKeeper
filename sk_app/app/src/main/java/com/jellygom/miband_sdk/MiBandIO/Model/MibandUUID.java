@@ -4,7 +4,7 @@ import java.util.UUID;
 
 public class MibandUUID {
 
-  public static final String MAC_FILTER_MI1S ="D3:3C:A8"; //"D0:EF:DC";///"C8:0F:10";
+  public static final String MAC_FILTER_MI1S ="D0:EF:DC";//"D3:3C:A8"; ///"C8:0F:10";
 
   // UUID 기본 형식
   private static final String BASIC_UUID = "0000%s-0000-1000-8000-00805f9b34fb";

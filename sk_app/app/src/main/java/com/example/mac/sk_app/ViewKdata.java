@@ -6,7 +6,9 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.io.ByteArrayOutputStream;
@@ -28,7 +30,9 @@ public class ViewKdata extends AppCompatActivity {
     HashMap<String,String> results;
     RequestKeeper rk;
     String param;
+    Button sosBtn;
     ImageButton syncBtn;
+    ImageView statusView;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -49,14 +53,9 @@ public class ViewKdata extends AppCompatActivity {
         });
 
 
-    }
-    public void cancel(View view) {             //처음으로 돌아가기
-        Intent intent = new Intent(this, Loading.class);
-        intent.putExtra("keeperID",keeperID);
-        startActivity(intent);
 
-        finish();
     }
+
     public class RequestKeeper extends AsyncTask<String, Void, String> {
 
         private String url=URLData.url;//"http://222.108.243.141:8089/sk_tomcat/receiveData.do";
@@ -149,9 +148,25 @@ public class ViewKdata extends AppCompatActivity {
             heartRate=(TextView)findViewById(R.id.heartRate);
             walkText=(TextView)findViewById(R.id.walk);
             walkCount=(TextView)findViewById(R.id.walkCount);
+            statusView=(ImageView)findViewById(R.id.statusImage2);
             heartRate.setText(results.get("heartRate"));
             walkCount.setText(results.get("walkCount"));
 
+            String status=results.get("status");
+            if(status!=null){
+                if(status.contains("emergency"))
+                {
+                    statusView.setImageResource(R.drawable.red);
+                }
+                else if(status.contains("warning"))
+                {
+                    statusView.setImageResource(R.drawable.yellow);
+                }
+                else if(status.contains("safe"))
+                {
+                    statusView.setImageResource(R.drawable.green);
+                }
+            }
            /* Enumeration<String> parameterNames = request.getParameterNames();
             while (parameterNames.hasMoreElements())
             {
@@ -171,4 +186,5 @@ public class ViewKdata extends AppCompatActivity {
 
 
     }
+
 }

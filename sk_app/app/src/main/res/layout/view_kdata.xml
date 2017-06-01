@@ -16,18 +16,20 @@
 
             <ImageButton
                 android:id="@+id/syncBtnKeeper"
-                android:layout_width="wrap_content"
-                android:layout_height="51dp"
-                android:layout_weight="0.10"
+                android:layout_width="64dp"
+                android:layout_height="62dp"
+                app:srcCompat="@drawable/refresh"
+                android:scaleType="centerInside"
                 />
 
     </LinearLayout>
 
     <ImageView
-        android:id="@+id/statusImage"
+        android:id="@+id/statusImage2"
         android:layout_width="match_parent"
         android:layout_height="68dp"
-        app:srcCompat="@drawable/gray" />
+        app:srcCompat="@drawable/gray"
+        />
     <!--데이터 보기(키퍼 화면)-->
     <TextView
         android:id="@+id/heart"
@@ -68,14 +70,5 @@
         android:textSize="30dp"
         android:textColor="#000000"
         android:text="10000" />
-    <Button
-        android:id="@+id/cancel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="20dp"
-        android:onClick="cancel"
-        android:text="역할재선택"
-        android:textColor="#000000"
-        android:textSize="20dp" />
+
 </LinearLayout>

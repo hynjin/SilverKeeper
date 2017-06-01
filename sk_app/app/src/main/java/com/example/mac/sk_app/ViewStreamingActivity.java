@@ -13,8 +13,8 @@ import android.widget.Button;
 public class ViewStreamingActivity extends AppCompatActivity {
     Button returnBtn;
     String keeperID,raspIP;
-    Context context;
     WebView web;
+    Intent intent;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,15 +31,17 @@ public class ViewStreamingActivity extends AppCompatActivity {
             }
         });
 */
-        context=this;
+
         raspIP=getIntent().getStringExtra("raspIP");
         keeperID=getIntent().getStringExtra("keeperID");
         returnBtn=(Button)findViewById(R.id.returnViewKData);
+        intent=new Intent(this,ViewKdata.class);
+        System.out.println("KeeperID!!!!!!!!:"+keeperID);
+        intent.putExtra("keeperID",keeperID);
         returnBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(context,ViewKdata.class);
-                intent.putExtra("keeperID",keeperID);
+
                 startActivity(intent);
                 finish();
 

@@ -43,6 +43,7 @@ public class Loading extends AppCompatActivity {
         {
             Intent intent=new Intent(this,ViewStreamingActivity.class);
             intent.putExtra("raspIP",getIntent().getStringExtra("raspIP"));
+            intent.putExtra("keeperID",getIntent().getStringExtra("keeperID"));
             startActivity(intent);
             finish();
 

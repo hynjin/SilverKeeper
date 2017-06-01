@@ -13,7 +13,17 @@
         android:layout_gravity="center_horizontal"
         android:textSize="30dp"
         android:textColor="#000000"
-        android:text="실버가 정보제공을 동의하지 않았습니다." />
+        android:text="실버가 정보제공을" />
+
+    <TextView
+        android:id="@+id/textView13"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_gravity="center_horizontal"
+        android:textSize="30dp"
+        android:textColor="#000000"
+        android:text="동의하지 않았습니다." />
 
     <Button
         android:id="@+id/ok"
@@ -22,7 +32,8 @@
         android:layout_marginTop="50dp"
         android:layout_gravity="center_horizontal"
         android:textSize="30dp"
-        android:textColor="#000000"
+        android:background="#3F51B5"
+        android:textColor="#FFFFFF"
         android:onClick="ok"
         android:text="확인" />
 </LinearLayout>
